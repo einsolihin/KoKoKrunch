@@ -670,110 +670,455 @@ namespace KoKoKrunch.Editor
             CreateEventSystem();
             GameObject canvas = CreateCanvas();
 
-            // Dark background for admin feel
-            var bg = new GameObject("Background");
-            bg.transform.SetParent(canvas.transform, false);
-            var bgRect = bg.AddComponent<RectTransform>();
-            bgRect.anchorMin = Vector2.zero;
-            bgRect.anchorMax = Vector2.one;
-            bgRect.sizeDelta = Vector2.zero;
-            var bgImg = bg.AddComponent<Image>();
-            bgImg.color = new Color(0.15f, 0.1f, 0.12f, 1f);
+            Color adminBg = new Color(0.12f, 0.08f, 0.06f, 1f);
+            Color panelBg = new Color(0.18f, 0.14f, 0.12f, 0.95f);
+            Color activeTab = new Color(0.9f, 0.75f, 0.2f, 1f);
+            Color inactiveTab = new Color(0.35f, 0.28f, 0.22f, 1f);
+            Color dangerRed = new Color(0.85f, 0.25f, 0.2f, 1f);
+            Color inputBg = new Color(0.15f, 0.12f, 0.1f, 1f);
+            Color headerGold = new Color(0.9f, 0.75f, 0.2f, 1f);
 
-            // Title
-            CreateTMPChild(canvas.transform, "AdminTitle", "ADMIN PANEL",
-                350, 40, TextAlignmentOptions.Center, White, 26, FontStyles.Bold,
-                new Vector2(0, 360));
+            // ── Root container (full screen with VLG) ──
+            var root = new GameObject("Root");
+            root.transform.SetParent(canvas.transform, false);
+            var rootRect = root.AddComponent<RectTransform>();
+            rootRect.anchorMin = Vector2.zero;
+            rootRect.anchorMax = Vector2.one;
+            rootRect.offsetMin = Vector2.zero;
+            rootRect.offsetMax = Vector2.zero;
+            root.AddComponent<Image>().color = adminBg;
 
-            // Total entries info
-            var totalText = CreateTMPChild(canvas.transform, "TotalEntriesText", "Total Entries: 0",
-                350, 25, TextAlignmentOptions.Left, new Color(0.7f, 0.7f, 0.7f), 14, FontStyles.Normal,
-                new Vector2(0, 325));
+            var rootVlg = root.AddComponent<VerticalLayoutGroup>();
+            rootVlg.spacing = 8f;
+            rootVlg.padding = new RectOffset(20, 20, 40, 20);
+            rootVlg.childControlWidth = true;
+            rootVlg.childControlHeight = true;
+            rootVlg.childForceExpandWidth = true;
+            rootVlg.childForceExpandHeight = false;
 
-            // Table header
-            var headerRow = CreatePanel(canvas.transform, "TableHeader",
-                new Vector2(0, 295), new Vector2(410, 30), new Color(0.3f, 0.2f, 0.25f, 1f));
-            var headerHLG = headerRow.AddComponent<HorizontalLayoutGroup>();
-            headerHLG.spacing = 5;
-            headerHLG.padding = new RectOffset(10, 10, 0, 0);
-            headerHLG.childAlignment = TextAnchor.MiddleLeft;
-            headerHLG.childForceExpandHeight = false;
+            // ── Title ──
+            var title = CreateTMPChild(root.transform, "AdminTitle", "Admin Panel",
+                0, 50, TextAlignmentOptions.Center, headerGold, 28, FontStyles.Bold);
+            title.AddComponent<LayoutElement>().preferredHeight = 50;
 
-            CreateTableHeaderCell(headerRow.transform, "#", 40);
-            CreateTableHeaderCell(headerRow.transform, "NAME", 120);
-            CreateTableHeaderCell(headerRow.transform, "SCORE", 70);
-            CreateTableHeaderCell(headerRow.transform, "TIMESTAMP", 150);
+            // ── Tab Bar ──
+            var tabBar = new GameObject("TabBar");
+            tabBar.transform.SetParent(root.transform, false);
+            tabBar.AddComponent<RectTransform>();
+            tabBar.AddComponent<LayoutElement>().preferredHeight = 50;
+            var tabHlg = tabBar.AddComponent<HorizontalLayoutGroup>();
+            tabHlg.spacing = 4f;
+            tabHlg.childControlWidth = true;
+            tabHlg.childControlHeight = true;
+            tabHlg.childForceExpandWidth = true;
+            tabHlg.childForceExpandHeight = true;
 
-            // Scrollable table body
-            var scrollObj = new GameObject("ScrollView");
-            scrollObj.transform.SetParent(canvas.transform, false);
-            var scrollRectTransform = scrollObj.AddComponent<RectTransform>();
-            scrollRectTransform.anchoredPosition = new Vector2(0, 20);
-            scrollRectTransform.sizeDelta = new Vector2(410, 500);
+            var leaderboardTab = CreateAdminTabButton(tabBar.transform, "LeaderboardTab", "Leaderboard", activeTab);
+            var settingsTab = CreateAdminTabButton(tabBar.transform, "SettingsTab", "Game Settings", inactiveTab);
 
-            var scrollView = scrollObj.AddComponent<ScrollRect>();
-            scrollView.horizontal = false;
+            // ── Content Area ──
+            var contentArea = new GameObject("ContentArea");
+            contentArea.transform.SetParent(root.transform, false);
+            contentArea.AddComponent<RectTransform>();
+            var contentLe = contentArea.AddComponent<LayoutElement>();
+            contentLe.flexibleHeight = 1f;
 
-            var scrollImage = scrollObj.AddComponent<Image>();
-            scrollImage.color = new Color(0.2f, 0.15f, 0.17f, 1f);
+            // ════════════════════════════════════════
+            // LEADERBOARD PANEL
+            // ════════════════════════════════════════
+            var lbPanel = new GameObject("LeaderboardPanel");
+            lbPanel.transform.SetParent(contentArea.transform, false);
+            var lbRect = lbPanel.AddComponent<RectTransform>();
+            lbRect.anchorMin = Vector2.zero;
+            lbRect.anchorMax = Vector2.one;
+            lbRect.offsetMin = Vector2.zero;
+            lbRect.offsetMax = Vector2.zero;
 
-            var mask = scrollObj.AddComponent<Mask>();
-            mask.showMaskGraphic = true;
+            var lbVlg = lbPanel.AddComponent<VerticalLayoutGroup>();
+            lbVlg.spacing = 8f;
+            lbVlg.padding = new RectOffset(0, 0, 10, 10);
+            lbVlg.childControlWidth = true;
+            lbVlg.childControlHeight = true;
+            lbVlg.childForceExpandWidth = true;
+            lbVlg.childForceExpandHeight = false;
 
-            // Content
-            var contentObj = new GameObject("Content");
-            contentObj.transform.SetParent(scrollObj.transform, false);
-            var contentRect = contentObj.AddComponent<RectTransform>();
-            contentRect.anchorMin = new Vector2(0, 1);
-            contentRect.anchorMax = new Vector2(1, 1);
-            contentRect.pivot = new Vector2(0.5f, 1);
-            contentRect.anchoredPosition = Vector2.zero;
-            contentRect.sizeDelta = new Vector2(0, 0);
+            // Total entries
+            var totalText = CreateTMPChild(lbPanel.transform, "TotalEntriesText", "Total Entries: 0",
+                0, 30, TextAlignmentOptions.MidlineLeft, White, 16);
+            totalText.AddComponent<LayoutElement>().preferredHeight = 30;
 
-            var vlg = contentObj.AddComponent<VerticalLayoutGroup>();
-            vlg.childAlignment = TextAnchor.UpperCenter;
-            vlg.spacing = 2;
-            vlg.padding = new RectOffset(0, 0, 5, 5);
-            vlg.childForceExpandWidth = true;
-            vlg.childForceExpandHeight = false;
+            // Table header row
+            var headerRow = new GameObject("TableHeader");
+            headerRow.transform.SetParent(lbPanel.transform, false);
+            headerRow.AddComponent<RectTransform>();
+            headerRow.AddComponent<LayoutElement>().preferredHeight = 32;
+            headerRow.AddComponent<Image>().color = new Color(0.25f, 0.2f, 0.15f, 1f);
+            var headerHlg = headerRow.AddComponent<HorizontalLayoutGroup>();
+            headerHlg.spacing = 5;
+            headerHlg.padding = new RectOffset(10, 10, 0, 0);
+            headerHlg.childControlWidth = true;
+            headerHlg.childControlHeight = true;
+            headerHlg.childForceExpandWidth = false;
+            headerHlg.childForceExpandHeight = true;
 
-            var csf = contentObj.AddComponent<ContentSizeFitter>();
-            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            CreateAdminHeaderCell(headerRow.transform, "#", 50, headerGold);
+            CreateAdminHeaderCell(headerRow.transform, "Name", 120, headerGold);
+            CreateAdminHeaderCell(headerRow.transform, "Score", 70, headerGold);
+            CreateAdminHeaderCell(headerRow.transform, "Timestamp", 0, headerGold, 1f);
 
-            scrollView.content = contentRect;
+            // Scroll view for table
+            var tableScroll = CreateAdminScrollView(lbPanel.transform, "TableScroll", panelBg);
+            var tableScrollLe = tableScroll.gameObject.AddComponent<LayoutElement>();
+            tableScrollLe.flexibleHeight = 1f;
+            var tableContent = tableScroll.content;
+
+            // Leaderboard button row
+            var lbBtnRow = new GameObject("ButtonRow");
+            lbBtnRow.transform.SetParent(lbPanel.transform, false);
+            lbBtnRow.AddComponent<RectTransform>();
+            lbBtnRow.AddComponent<LayoutElement>().preferredHeight = 45;
+            var lbBtnHlg = lbBtnRow.AddComponent<HorizontalLayoutGroup>();
+            lbBtnHlg.spacing = 10;
+            lbBtnHlg.childControlWidth = true;
+            lbBtnHlg.childControlHeight = true;
+            lbBtnHlg.childForceExpandWidth = true;
+            lbBtnHlg.childForceExpandHeight = true;
+
+            var exportBtn = CreateAdminActionButton(lbBtnRow.transform, "ExportCSVButton", "Export CSV", activeTab);
+            var clearBtn = CreateAdminActionButton(lbBtnRow.transform, "ClearDataButton", "Clear Data", dangerRed);
 
             // Export status text
-            var exportStatus = CreateTMPChild(canvas.transform, "ExportStatusText", "",
-                400, 40, TextAlignmentOptions.Center, new Color(0.5f, 1f, 0.5f), 12, FontStyles.Italic,
-                new Vector2(0, -270));
+            var exportStatus = CreateTMPChild(lbPanel.transform, "ExportStatusText", "",
+                0, 35, TextAlignmentOptions.MidlineLeft, new Color(0.7f, 0.7f, 0.7f), 12);
+            exportStatus.AddComponent<LayoutElement>().preferredHeight = 35;
 
-            // Buttons
-            var exportBtn = CreateButton(canvas.transform, "ExportCSVButton", "EXPORT TO CSV",
-                new Vector2(0, -310), new Vector2(250, 50), new Color(0.2f, 0.7f, 0.3f), White, 20);
-            var clearBtn = CreateButton(canvas.transform, "ClearDataButton", "CLEAR ALL DATA",
-                new Vector2(0, -370), new Vector2(250, 50), new Color(0.8f, 0.2f, 0.2f), White, 20);
-            var backBtn = CreateButton(canvas.transform, "BackButton", "BACK",
-                new Vector2(0, -420), new Vector2(250, 45), new Color(0.4f, 0.4f, 0.4f), White, 18);
+            // ════════════════════════════════════════
+            // SETTINGS PANEL
+            // ════════════════════════════════════════
+            var settingsPanel = new GameObject("SettingsPanel");
+            settingsPanel.transform.SetParent(contentArea.transform, false);
+            var spRect = settingsPanel.AddComponent<RectTransform>();
+            spRect.anchorMin = Vector2.zero;
+            spRect.anchorMax = Vector2.one;
+            spRect.offsetMin = Vector2.zero;
+            spRect.offsetMax = Vector2.zero;
 
-            // Create admin table row prefab
+            var spVlg = settingsPanel.AddComponent<VerticalLayoutGroup>();
+            spVlg.spacing = 5f;
+            spVlg.padding = new RectOffset(0, 0, 10, 10);
+            spVlg.childControlWidth = true;
+            spVlg.childControlHeight = true;
+            spVlg.childForceExpandWidth = true;
+            spVlg.childForceExpandHeight = false;
+
+            // Settings scroll view
+            var settingsScroll = CreateAdminScrollView(settingsPanel.transform, "SettingsScroll", panelBg);
+            var settingsScrollLe = settingsScroll.gameObject.AddComponent<LayoutElement>();
+            settingsScrollLe.flexibleHeight = 1f;
+            var settingsContent = settingsScroll.content;
+
+            // Setting rows
+            CreateAdminSectionHeader(settingsContent.transform, "Scoring", headerGold);
+            var strawberryInput = CreateAdminSettingRow(settingsContent.transform, "Strawberry Points", inputBg);
+            var kokoInput = CreateAdminSettingRow(settingsContent.transform, "KoKo Krunch Points", inputBg);
+
+            CreateAdminSectionHeader(settingsContent.transform, "Difficulty", headerGold);
+            var fallSpeedInput = CreateAdminSettingRow(settingsContent.transform, "Item Fall Speed", inputBg);
+            var maxFallInput = CreateAdminSettingRow(settingsContent.transform, "Max Fall Speed", inputBg);
+            var fallIncreaseInput = CreateAdminSettingRow(settingsContent.transform, "Fall Speed Increase", inputBg);
+
+            CreateAdminSectionHeader(settingsContent.transform, "Spawning", headerGold);
+            var spawnIntervalInput = CreateAdminSettingRow(settingsContent.transform, "Spawn Interval (s)", inputBg);
+            var minSpawnInput = CreateAdminSettingRow(settingsContent.transform, "Min Spawn Interval (s)", inputBg);
+            var spawnAccelInput = CreateAdminSettingRow(settingsContent.transform, "Spawn Acceleration", inputBg);
+
+            CreateAdminSectionHeader(settingsContent.transform, "Game Rules", headerGold);
+            var durationInput = CreateAdminSettingRow(settingsContent.transform, "Game Duration (s)", inputBg);
+            var livesInput = CreateAdminSettingRow(settingsContent.transform, "Max Lives", inputBg);
+
+            CreateAdminSectionHeader(settingsContent.transform, "Player", headerGold);
+            var moveSpeedInput = CreateAdminSettingRow(settingsContent.transform, "Player Move Speed", inputBg);
+
+            // Settings button row
+            var sBtnRow = new GameObject("SettingsBtnRow");
+            sBtnRow.transform.SetParent(settingsPanel.transform, false);
+            sBtnRow.AddComponent<RectTransform>();
+            sBtnRow.AddComponent<LayoutElement>().preferredHeight = 45;
+            var sBtnHlg = sBtnRow.AddComponent<HorizontalLayoutGroup>();
+            sBtnHlg.spacing = 10;
+            sBtnHlg.childControlWidth = true;
+            sBtnHlg.childControlHeight = true;
+            sBtnHlg.childForceExpandWidth = true;
+            sBtnHlg.childForceExpandHeight = true;
+
+            var saveBtn = CreateAdminActionButton(sBtnRow.transform, "SaveSettingsButton", "Save Settings", activeTab);
+            var resetBtn = CreateAdminActionButton(sBtnRow.transform, "ResetDefaultsButton", "Reset to Defaults", dangerRed);
+
+            // Settings status text
+            var settingsStatus = CreateTMPChild(settingsPanel.transform, "SettingsStatusText", "",
+                0, 30, TextAlignmentOptions.Center, new Color(0.7f, 0.7f, 0.7f), 14);
+            settingsStatus.AddComponent<LayoutElement>().preferredHeight = 30;
+
+            // Hide settings panel by default
+            settingsPanel.SetActive(false);
+
+            // ── Back Button ──
+            var backBtn = CreateAdminActionButton(root.transform, "BackButton", "Back", inactiveTab);
+            backBtn.gameObject.AddComponent<LayoutElement>().preferredHeight = 50;
+
+            // ════════════════════════════════════════
+            // Create table row prefab
+            // ════════════════════════════════════════
             CreateAdminTableRowPrefab();
 
-            // Wire up AdminUI
+            // ════════════════════════════════════════
+            // Wire up AdminUI component
+            // ════════════════════════════════════════
             var adminUI = canvas.AddComponent<KoKoKrunch.UI.AdminUI>();
             var so = new SerializedObject(adminUI);
-            so.FindProperty("tableContent").objectReferenceValue = contentRect;
 
+            // Tabs
+            so.FindProperty("leaderboardTabButton").objectReferenceValue = leaderboardTab.GetComponent<Button>();
+            so.FindProperty("settingsTabButton").objectReferenceValue = settingsTab.GetComponent<Button>();
+            so.FindProperty("leaderboardPanel").objectReferenceValue = lbPanel;
+            so.FindProperty("settingsPanel").objectReferenceValue = settingsPanel;
+
+            // Leaderboard
+            so.FindProperty("tableContent").objectReferenceValue = tableContent;
             var rowPrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabsPath}/UI/AdminTableRow.prefab");
             so.FindProperty("tableRowPrefab").objectReferenceValue = rowPrefab;
             so.FindProperty("totalEntriesText").objectReferenceValue = totalText.GetComponent<TextMeshProUGUI>();
             so.FindProperty("exportStatusText").objectReferenceValue = exportStatus.GetComponent<TextMeshProUGUI>();
             so.FindProperty("exportCSVButton").objectReferenceValue = exportBtn.GetComponent<Button>();
             so.FindProperty("clearDataButton").objectReferenceValue = clearBtn.GetComponent<Button>();
+
+            // Settings inputs
+            so.FindProperty("strawberryPointsInput").objectReferenceValue = strawberryInput;
+            so.FindProperty("kokoKrunchPointsInput").objectReferenceValue = kokoInput;
+            so.FindProperty("itemFallSpeedInput").objectReferenceValue = fallSpeedInput;
+            so.FindProperty("maxFallSpeedInput").objectReferenceValue = maxFallInput;
+            so.FindProperty("fallSpeedIncreaseInput").objectReferenceValue = fallIncreaseInput;
+            so.FindProperty("initialSpawnIntervalInput").objectReferenceValue = spawnIntervalInput;
+            so.FindProperty("minimumSpawnIntervalInput").objectReferenceValue = minSpawnInput;
+            so.FindProperty("spawnAccelerationInput").objectReferenceValue = spawnAccelInput;
+            so.FindProperty("gameDurationInput").objectReferenceValue = durationInput;
+            so.FindProperty("maxLivesInput").objectReferenceValue = livesInput;
+            so.FindProperty("playerMoveSpeedInput").objectReferenceValue = moveSpeedInput;
+
+            // Settings buttons
+            so.FindProperty("saveSettingsButton").objectReferenceValue = saveBtn.GetComponent<Button>();
+            so.FindProperty("resetDefaultsButton").objectReferenceValue = resetBtn.GetComponent<Button>();
+            so.FindProperty("settingsStatusText").objectReferenceValue = settingsStatus.GetComponent<TextMeshProUGUI>();
+
+            // Navigation
             so.FindProperty("backButton").objectReferenceValue = backBtn.GetComponent<Button>();
+
             so.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/AdminScene.unity");
-            Debug.Log("AdminScene created");
+            Debug.Log("AdminScene created with full tabbed UI");
+        }
+
+        // ── Admin Scene Helper Methods ──
+
+        private static GameObject CreateAdminTabButton(Transform parent, string name, string label, Color bgColor)
+        {
+            var obj = new GameObject(name);
+            obj.transform.SetParent(parent, false);
+            obj.AddComponent<RectTransform>();
+            obj.AddComponent<Image>().color = bgColor;
+            var btn = obj.AddComponent<Button>();
+            btn.targetGraphic = obj.GetComponent<Image>();
+
+            var labelObj = CreateTMPChild(obj.transform, "Label", label,
+                0, 0, TextAlignmentOptions.Center, White, 16, FontStyles.Bold);
+            var labelRect = labelObj.GetComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = Vector2.zero;
+            labelRect.offsetMax = Vector2.zero;
+
+            return obj;
+        }
+
+        private static GameObject CreateAdminActionButton(Transform parent, string name, string label, Color bgColor)
+        {
+            var obj = new GameObject(name);
+            obj.transform.SetParent(parent, false);
+            obj.AddComponent<RectTransform>();
+            obj.AddComponent<Image>().color = bgColor;
+            var btn = obj.AddComponent<Button>();
+            btn.targetGraphic = obj.GetComponent<Image>();
+
+            var labelObj = CreateTMPChild(obj.transform, "Label", label,
+                0, 0, TextAlignmentOptions.Center, White, 14, FontStyles.Bold);
+            var labelRect = labelObj.GetComponent<RectTransform>();
+            labelRect.anchorMin = Vector2.zero;
+            labelRect.anchorMax = Vector2.one;
+            labelRect.offsetMin = Vector2.zero;
+            labelRect.offsetMax = Vector2.zero;
+
+            return obj;
+        }
+
+        private static void CreateAdminHeaderCell(Transform parent, string label, float prefWidth, Color color, float flexWidth = 0f)
+        {
+            var obj = CreateTMPChild(parent, $"Header_{label}", $"<b>{label}</b>",
+                prefWidth, 0, TextAlignmentOptions.MidlineLeft, color, 13);
+            var le = obj.AddComponent<LayoutElement>();
+            if (prefWidth > 0) le.preferredWidth = prefWidth;
+            le.flexibleWidth = flexWidth;
+        }
+
+        private static ScrollRect CreateAdminScrollView(Transform parent, string name, Color bgColor)
+        {
+            var scrollObj = new GameObject(name);
+            scrollObj.transform.SetParent(parent, false);
+            scrollObj.AddComponent<RectTransform>();
+            scrollObj.AddComponent<Image>().color = bgColor;
+
+            var scrollRect = scrollObj.AddComponent<ScrollRect>();
+            scrollRect.horizontal = false;
+            scrollRect.vertical = true;
+            scrollRect.movementType = ScrollRect.MovementType.Clamped;
+
+            // Viewport
+            var viewport = new GameObject("Viewport");
+            viewport.transform.SetParent(scrollObj.transform, false);
+            var vpRect = viewport.AddComponent<RectTransform>();
+            vpRect.anchorMin = Vector2.zero;
+            vpRect.anchorMax = Vector2.one;
+            vpRect.offsetMin = new Vector2(5, 5);
+            vpRect.offsetMax = new Vector2(-5, -5);
+            viewport.AddComponent<Image>().color = White;
+            viewport.AddComponent<Mask>().showMaskGraphic = false;
+
+            scrollRect.viewport = vpRect;
+
+            // Content
+            var content = new GameObject("Content");
+            content.transform.SetParent(viewport.transform, false);
+            var contentRect = content.AddComponent<RectTransform>();
+            contentRect.anchorMin = new Vector2(0, 1);
+            contentRect.anchorMax = new Vector2(1, 1);
+            contentRect.pivot = new Vector2(0.5f, 1);
+            contentRect.offsetMin = Vector2.zero;
+            contentRect.offsetMax = Vector2.zero;
+
+            var vlg = content.AddComponent<VerticalLayoutGroup>();
+            vlg.spacing = 2;
+            vlg.padding = new RectOffset(5, 5, 5, 5);
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = true;
+            vlg.childForceExpandWidth = true;
+            vlg.childForceExpandHeight = false;
+
+            var csf = content.AddComponent<ContentSizeFitter>();
+            csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            scrollRect.content = contentRect;
+
+            return scrollRect;
+        }
+
+        private static void CreateAdminSectionHeader(Transform parent, string title, Color color)
+        {
+            var obj = new GameObject($"Header_{title}");
+            obj.transform.SetParent(parent, false);
+            obj.AddComponent<RectTransform>();
+            obj.AddComponent<LayoutElement>().preferredHeight = 35;
+
+            var tmp = CreateTMPChild(obj.transform, "Text", $"<b>--- {title} ---</b>",
+                0, 0, TextAlignmentOptions.MidlineLeft, color, 16);
+            var textRect = tmp.GetComponent<RectTransform>();
+            textRect.anchorMin = Vector2.zero;
+            textRect.anchorMax = Vector2.one;
+            textRect.offsetMin = new Vector2(10, 0);
+            textRect.offsetMax = Vector2.zero;
+        }
+
+        private static TMP_InputField CreateAdminSettingRow(Transform parent, string label, Color inputBgColor)
+        {
+            var row = new GameObject($"Row_{label}");
+            row.transform.SetParent(parent, false);
+            row.AddComponent<RectTransform>();
+            row.AddComponent<LayoutElement>().preferredHeight = 38;
+
+            var hlg = row.AddComponent<HorizontalLayoutGroup>();
+            hlg.spacing = 10;
+            hlg.padding = new RectOffset(10, 10, 2, 2);
+            hlg.childAlignment = TextAnchor.MiddleLeft;
+            hlg.childControlWidth = true;
+            hlg.childControlHeight = true;
+            hlg.childForceExpandWidth = false;
+            hlg.childForceExpandHeight = false;
+
+            // Label
+            var labelObj = CreateTMPChild(row.transform, "Label", label,
+                200, 0, TextAlignmentOptions.MidlineLeft, White, 14);
+            var labelLe = labelObj.AddComponent<LayoutElement>();
+            labelLe.preferredWidth = 200;
+            labelLe.flexibleWidth = 1;
+
+            // Input field
+            var inputObj = new GameObject("InputField");
+            inputObj.transform.SetParent(row.transform, false);
+            inputObj.AddComponent<RectTransform>();
+            inputObj.AddComponent<Image>().color = inputBgColor;
+
+            var inputLe = inputObj.AddComponent<LayoutElement>();
+            inputLe.preferredWidth = 130;
+            inputLe.preferredHeight = 34;
+            inputLe.flexibleWidth = 0;
+
+            // Text Area
+            var textArea = new GameObject("Text Area");
+            textArea.transform.SetParent(inputObj.transform, false);
+            var taRect = textArea.AddComponent<RectTransform>();
+            taRect.anchorMin = Vector2.zero;
+            taRect.anchorMax = Vector2.one;
+            taRect.offsetMin = new Vector2(8, 2);
+            taRect.offsetMax = new Vector2(-8, -2);
+            textArea.AddComponent<RectMask2D>();
+
+            // Input text
+            var inputTextObj = new GameObject("Text");
+            inputTextObj.transform.SetParent(textArea.transform, false);
+            var itRect = inputTextObj.AddComponent<RectTransform>();
+            itRect.anchorMin = Vector2.zero;
+            itRect.anchorMax = Vector2.one;
+            itRect.offsetMin = Vector2.zero;
+            itRect.offsetMax = Vector2.zero;
+
+            var inputTmp = inputTextObj.AddComponent<TextMeshProUGUI>();
+            inputTmp.fontSize = 14;
+            inputTmp.color = White;
+            inputTmp.alignment = TextAlignmentOptions.MidlineLeft;
+
+            // Placeholder
+            var phObj = new GameObject("Placeholder");
+            phObj.transform.SetParent(textArea.transform, false);
+            var phRect = phObj.AddComponent<RectTransform>();
+            phRect.anchorMin = Vector2.zero;
+            phRect.anchorMax = Vector2.one;
+            phRect.offsetMin = Vector2.zero;
+            phRect.offsetMax = Vector2.zero;
+
+            var phTmp = phObj.AddComponent<TextMeshProUGUI>();
+            phTmp.text = "...";
+            phTmp.fontSize = 14;
+            phTmp.color = new Color(1f, 1f, 1f, 0.3f);
+            phTmp.alignment = TextAlignmentOptions.MidlineLeft;
+
+            // Wire TMP_InputField
+            var inputField = inputObj.AddComponent<TMP_InputField>();
+            inputField.textComponent = inputTmp;
+            inputField.textViewport = taRect;
+            inputField.placeholder = phTmp;
+            inputField.contentType = TMP_InputField.ContentType.DecimalNumber;
+            inputField.pointSize = 14;
+
+            return inputField;
         }
 
         private static void CreateTableHeaderCell(Transform parent, string text, float width)
@@ -847,7 +1192,7 @@ namespace KoKoKrunch.Editor
             }
 
             EditorBuildSettings.scenes = scenes.ToArray();
-            Debug.Log("Build Settings updated with all 6 scenes");
+            Debug.Log("Build Settings updated with all 7 scenes");
         }
 
         // ──────────────────────────────────────────────

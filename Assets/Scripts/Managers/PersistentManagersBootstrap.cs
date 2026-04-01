@@ -48,6 +48,16 @@ namespace KoKoKrunch.Managers
             amType.GetField("bgmSource", flags)?.SetValue(audioManager, bgmSource);
             amType.GetField("sfxSource", flags)?.SetValue(audioManager, sfxSource);
 
+            // SettingsManager
+            if (SettingsManager.Instance == null)
+                managers.AddComponent<SettingsManager>();
+
+            // ScreensaverManager
+            managers.AddComponent<ScreensaverManager>();
+
+            // AdminExitManager
+            managers.AddComponent<AdminExitManager>();
+
             Debug.Log("[Bootstrap] Persistent Managers created automatically.");
         }
     }
