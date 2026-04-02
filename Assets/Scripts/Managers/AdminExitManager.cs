@@ -1,6 +1,10 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 namespace KoKoKrunch.Managers
 {
@@ -31,6 +35,12 @@ namespace KoKoKrunch.Managers
             }
 
             Instance = this;
+            EnhancedTouchSupport.Enable();
+        }
+
+        private void OnDestroy()
+        {
+            EnhancedTouchSupport.Disable();
         }
 
         private void Start()
@@ -51,25 +61,30 @@ namespace KoKoKrunch.Managers
                     tapCount = 0;
             }
 
-            // Detect taps/clicks in top-right corner
-            if (Input.GetMouseButtonDown(0) || (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began))
+            // Detect taps/clicks in top-right corner (new Input System)
+            Vector2 pos = Vector2.zero;
+            bool tapped = false;
+
+            if (Touch.activeTouches.Count > 0 && Touch.activeTouches[0].phase == TouchPhase.Began)
             {
-                Vector2 pos;
-                if (Input.touchCount > 0)
-                    pos = Input.GetTouch(0).position;
-                else
-                    pos = Input.mousePosition;
+                pos = Touch.activeTouches[0].screenPosition;
+                tapped = true;
+            }
+            else if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+            {
+                pos = Mouse.current.position.ReadValue();
+                tapped = true;
+            }
 
-                if (IsInTopRightCorner(pos))
+            if (tapped && IsInTopRightCorner(pos))
+            {
+                tapCount++;
+                tapResetTimer = TapResetTimeout;
+
+                if (tapCount >= RequiredTaps)
                 {
-                    tapCount++;
-                    tapResetTimer = TapResetTimeout;
-
-                    if (tapCount >= RequiredTaps)
-                    {
-                        tapCount = 0;
-                        ShowPasswordPopup();
-                    }
+                    tapCount = 0;
+                    ShowPasswordPopup();
                 }
             }
         }

@@ -1,7 +1,10 @@
 using KoKoKrunch.Utils;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace KoKoKrunch.Managers
 {
@@ -15,6 +18,7 @@ namespace KoKoKrunch.Managers
 
         private Canvas screensaverCanvas;
         private GameObject screensaverOverlay;
+        private Vector2 lastMousePosition;
 
         private void Awake()
         {
@@ -25,12 +29,18 @@ namespace KoKoKrunch.Managers
             }
 
             Instance = this;
+            EnhancedTouchSupport.Enable();
         }
 
         private void Start()
         {
             CreateScreensaverOverlay();
             ResetTimer();
+        }
+
+        private void OnDestroy()
+        {
+            EnhancedTouchSupport.Disable();
         }
 
         private void Update()
@@ -68,18 +78,26 @@ namespace KoKoKrunch.Managers
 
         private bool HasAnyInput()
         {
-            // Touch
-            if (Input.touchCount > 0) return true;
+            // Touch (new Input System)
+            if (Touch.activeTouches.Count > 0) return true;
 
-            // Mouse click
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) return true;
-
-            // Any key
-            if (Input.anyKeyDown) return true;
-
-            // Mouse movement
-            if (Mathf.Abs(Input.GetAxis("Mouse X")) > 0.01f || Mathf.Abs(Input.GetAxis("Mouse Y")) > 0.01f)
+            // Mouse click (new Input System)
+            if (Mouse.current != null && (Mouse.current.leftButton.wasPressedThisFrame || Mouse.current.rightButton.wasPressedThisFrame))
                 return true;
+
+            // Any key (new Input System)
+            if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame) return true;
+
+            // Mouse movement (new Input System)
+            if (Mouse.current != null)
+            {
+                Vector2 currentMousePos = Mouse.current.position.ReadValue();
+                if (Vector2.Distance(currentMousePos, lastMousePosition) > 1f)
+                {
+                    lastMousePosition = currentMousePos;
+                    return true;
+                }
+            }
 
             return false;
         }

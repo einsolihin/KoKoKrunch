@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using TMPro;
@@ -26,6 +27,8 @@ namespace KoKoKrunch.Editor
 
         private static string ScenesPath => "Assets/Scenes/Game";
         private static string PrefabsPath => "Assets/Prefabs";
+        private static string ImagesPath => "Assets/Images";
+        private static string FontsPath => "Assets/Fonts";
 
         [MenuItem("KoKo Krunch/Setup All Scenes and Prefabs")]
         public static void SetupAll()
@@ -132,23 +135,54 @@ namespace KoKoKrunch.Editor
             return AssetDatabase.LoadAssetAtPath<Sprite>(path);
         }
 
+        private static Sprite LoadImageSprite(string filename)
+        {
+            string path = $"{ImagesPath}/{filename}";
+            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
+            if (sprite == null)
+                Debug.LogWarning($"Image not found: {path}");
+            return sprite;
+        }
+
+        private static TMP_FontAsset LoadFont(string filename)
+        {
+            string path = $"{FontsPath}/{filename}";
+            var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(path);
+            if (font == null)
+                Debug.LogWarning($"Font not found: {path}");
+            return font;
+        }
+
+        private static void SetImageSprite(GameObject imgObj, string filename)
+        {
+            var sprite = LoadImageSprite(filename);
+            if (sprite != null)
+            {
+                var img = imgObj.GetComponent<Image>();
+                img.sprite = sprite;
+                img.color = Color.white;
+                img.preserveAspect = true;
+            }
+        }
+
         // ──────────────────────────────────────────────
         // Prefabs
         // ──────────────────────────────────────────────
         private static void CreateItemPrefabs()
         {
-            CreateItemPrefab("Strawberry", StrawberryRed, KoKoKrunch.Gameplay.ItemType.Strawberry, 0.5f);
-            CreateItemPrefab("KokoKrunchPack1", KokoPack1Brown, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack1, 0.6f);
-            CreateItemPrefab("KokoKrunchPack2", KokoPack2Green, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack2, 0.6f);
+            CreateItemPrefab("Strawberry", "strawberry.png", StrawberryRed, KoKoKrunch.Gameplay.ItemType.Strawberry, 0.5f);
+            CreateItemPrefab("KokoKrunchPack1", "kokokrunch ori.png", KokoPack1Brown, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack1, 0.6f);
+            CreateItemPrefab("KokoKrunchPack2", "kokokrunch strawbery.png", KokoPack2Green, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack2, 0.6f);
         }
 
-        private static GameObject CreateItemPrefab(string name, Color color, KoKoKrunch.Gameplay.ItemType itemType, float size)
+        private static GameObject CreateItemPrefab(string name, string imageName, Color fallbackColor, KoKoKrunch.Gameplay.ItemType itemType, float size)
         {
             string path = $"{PrefabsPath}/Items/{name}.prefab";
 
             GameObject obj = new GameObject(name);
             var sr = obj.AddComponent<SpriteRenderer>();
-            sr.sprite = CreatePlaceholderSprite($"item_{name}", 64, 64, color);
+            var sprite = LoadImageSprite(imageName);
+            sr.sprite = sprite != null ? sprite : CreatePlaceholderSprite($"item_{name}", 64, 64, fallbackColor);
             obj.transform.localScale = Vector3.one * size;
 
             var col = obj.AddComponent<BoxCollider2D>();
@@ -238,21 +272,26 @@ namespace KoKoKrunch.Editor
             GameObject canvas = CreateCanvas();
             CreateBackground(canvas.transform);
 
-            // Logo area
-            var logoPanel = CreatePanel(canvas.transform, "LogoPanel",
-                new Vector2(0, 150), new Vector2(350, 200), new Color(1, 1, 1, 0));
-            CreateTMPChild(logoPanel.transform, "TitleText", "KOKO KRUNCH\nSTRAWBERRY",
-                350, 80, TextAlignmentOptions.Center, White, 36, FontStyles.Bold);
-            CreateTMPChild(logoPanel.transform, "SubtitleText", "CATCH & WIN",
-                350, 60, TextAlignmentOptions.Center, Gold, 42, FontStyles.Bold);
+            // Logo image
+            var logoImg = CreateImage(canvas.transform, "LogoImage",
+                new Vector2(0, 200), new Vector2(300, 150), White);
+            SetImageSprite(logoImg, "logo kokokrunch.png");
 
-            // Start Button
-            var startBtn = CreateButton(canvas.transform, "StartButton", "START!",
-                new Vector2(0, -200), new Vector2(200, 60), ButtonPink, TextDark, 28);
+            // Catch & Win image
+            var catchWinImg = CreateImage(canvas.transform, "CatchWinImage",
+                new Vector2(0, 50), new Vector2(300, 100), White);
+            SetImageSprite(catchWinImg, "catch n win.png");
 
-            // Mascot placeholder
+            // Start Button (use image asset)
+            var startBtn = CreateImage(canvas.transform, "StartButton",
+                new Vector2(0, -200), new Vector2(200, 70), White);
+            SetImageSprite(startBtn, "start button.png");
+            startBtn.AddComponent<Button>().targetGraphic = startBtn.GetComponent<Image>();
+
+            // Mascot / Kokokrunch image
             var mascot = CreateImage(canvas.transform, "MascotImage",
-                new Vector2(0, -50), new Vector2(120, 120), CatcherYellow);
+                new Vector2(0, -70), new Vector2(150, 150), White);
+            SetImageSprite(mascot, "kokokrunch.png");
 
             // Hidden admin button (top-right, invisible — tap 10 times to access admin)
             var hiddenBtn = new GameObject("HiddenAdminButton");
@@ -273,7 +312,7 @@ namespace KoKoKrunch.Editor
             // Wire up LandingUI
             var landingUI = canvas.AddComponent<KoKoKrunch.UI.LandingUI>();
             var so = new SerializedObject(landingUI);
-            so.FindProperty("startButton").objectReferenceValue = startBtn.GetComponent<Button>();
+            so.FindProperty("startButton").objectReferenceValue = startBtn.GetComponentInChildren<Button>();
             so.FindProperty("hiddenAdminButton").objectReferenceValue = hiddenButton;
             so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -295,14 +334,20 @@ namespace KoKoKrunch.Editor
             GameObject canvas = CreateCanvas();
             CreateBackground(canvas.transform);
 
-            // NAME label
-            CreateTMPChild(canvas.transform, "NameLabel", "NAME",
-                300, 60, TextAlignmentOptions.Center, White, 40, FontStyles.Bold,
-                new Vector2(0, 100));
+            // NAME label image
+            var nameLabel = CreateImage(canvas.transform, "NameLabelImage",
+                new Vector2(0, 150), new Vector2(200, 60), White);
+            SetImageSprite(nameLabel, "name .png");
 
-            // Input Field
+            // Name box background image
+            var nameBox = CreateImage(canvas.transform, "NameBoxImage",
+                new Vector2(0, 50), new Vector2(320, 60), White);
+            SetImageSprite(nameBox, "name box.png");
+
+            // Input Field (overlaid on the name box)
             var inputFieldObj = CreateInputField(canvas.transform, "NameInputField",
-                new Vector2(0, 20), new Vector2(300, 50));
+                new Vector2(0, 50), new Vector2(280, 45));
+            inputFieldObj.GetComponent<Image>().color = new Color(1, 1, 1, 0); // transparent bg
 
             // Auto-open Windows touch keyboard when input field is selected
             inputFieldObj.AddComponent<KoKoKrunch.Utils.WindowsTouchKeyboard>();
@@ -310,21 +355,24 @@ namespace KoKoKrunch.Editor
             // Error text
             var errorText = CreateTMPChild(canvas.transform, "ErrorText", "",
                 300, 30, TextAlignmentOptions.Center, new Color(1, 0.3f, 0.3f), 16,
-                FontStyles.Normal, new Vector2(0, -20));
+                FontStyles.Normal, new Vector2(0, -5));
 
-            // Next Button
-            var nextBtn = CreateButton(canvas.transform, "NextButton", "NEXT",
-                new Vector2(0, -200), new Vector2(200, 60), ButtonPink, TextDark, 28);
+            // Next Button (use image asset)
+            var nextBtn = CreateImage(canvas.transform, "NextButton",
+                new Vector2(0, -200), new Vector2(200, 70), White);
+            SetImageSprite(nextBtn, "next buttton.png");
+            nextBtn.AddComponent<Button>().targetGraphic = nextBtn.GetComponent<Image>();
 
             // Mascot
-            CreateImage(canvas.transform, "MascotImage",
-                new Vector2(100, -100), new Vector2(100, 100), CatcherYellow);
+            var mascot = CreateImage(canvas.transform, "MascotImage",
+                new Vector2(100, -100), new Vector2(120, 120), White);
+            SetImageSprite(mascot, "kokokrunch.png");
 
             // Wire up NameInputUI
             var nameUI = canvas.AddComponent<KoKoKrunch.UI.NameInputUI>();
             var so = new SerializedObject(nameUI);
             so.FindProperty("nameInputField").objectReferenceValue = inputFieldObj.GetComponent<TMP_InputField>();
-            so.FindProperty("nextButton").objectReferenceValue = nextBtn.GetComponent<Button>();
+            so.FindProperty("nextButton").objectReferenceValue = nextBtn.GetComponentInChildren<Button>();
             so.FindProperty("errorText").objectReferenceValue = errorText.GetComponent<TextMeshProUGUI>();
             so.ApplyModifiedPropertiesWithoutUndo();
 
@@ -343,56 +391,56 @@ namespace KoKoKrunch.Editor
             GameObject canvas = CreateCanvas();
             CreateBackground(canvas.transform);
 
-            // Title
-            CreateTMPChild(canvas.transform, "InstructionTitle", "HOW TO PLAY",
-                350, 50, TextAlignmentOptions.Center, White, 32, FontStyles.Bold,
-                new Vector2(0, 280));
+            // Instruction items with real images
+            float yStart = 220;
+            float yStep = -100;
 
-            // Instruction items
-            float yStart = 180;
-            float yStep = -90;
-
-            // Strawberry
+            // Strawberry row
             var row1 = CreatePanel(canvas.transform, "Row1",
-                new Vector2(0, yStart), new Vector2(350, 80), new Color(1, 1, 1, 0));
-            CreateImage(row1.transform, "StrawberryIcon",
-                new Vector2(-120, 0), new Vector2(50, 50), StrawberryRed);
-            CreateTMPChild(row1.transform, "StrawberryLabel", "STRAWBERRY\n+5 POINTS",
-                200, 60, TextAlignmentOptions.Left, White, 18, FontStyles.Normal,
-                new Vector2(30, 0));
+                new Vector2(0, yStart), new Vector2(350, 90), new Color(1, 1, 1, 0));
+            var strawberryIcon = CreateImage(row1.transform, "StrawberryIcon",
+                new Vector2(-120, 0), new Vector2(60, 60), White);
+            SetImageSprite(strawberryIcon, "strawberry.png");
+            var pts5 = CreateImage(row1.transform, "5PointsImage",
+                new Vector2(30, 0), new Vector2(120, 50), White);
+            SetImageSprite(pts5, "5 points.png");
 
-            // Koko Pack 1
+            // Koko Pack 1 row
             var row2 = CreatePanel(canvas.transform, "Row2",
-                new Vector2(0, yStart + yStep), new Vector2(350, 80), new Color(1, 1, 1, 0));
-            CreateImage(row2.transform, "Pack1Icon",
-                new Vector2(-120, 0), new Vector2(50, 50), KokoPack1Brown);
-            CreateTMPChild(row2.transform, "Pack1Label", "KOKO KRUNCH PACK\n+10 POINTS",
-                200, 60, TextAlignmentOptions.Left, White, 18, FontStyles.Normal,
-                new Vector2(30, 0));
+                new Vector2(0, yStart + yStep), new Vector2(350, 90), new Color(1, 1, 1, 0));
+            var pack1Icon = CreateImage(row2.transform, "Pack1Icon",
+                new Vector2(-120, 0), new Vector2(60, 60), White);
+            SetImageSprite(pack1Icon, "kokokrunch ori.png");
+            var pts10a = CreateImage(row2.transform, "10PointsImage1",
+                new Vector2(30, 0), new Vector2(120, 50), White);
+            SetImageSprite(pts10a, "10 points.png");
 
-            // Koko Pack 2
+            // Koko Pack 2 row
             var row3 = CreatePanel(canvas.transform, "Row3",
-                new Vector2(0, yStart + yStep * 2), new Vector2(350, 80), new Color(1, 1, 1, 0));
-            CreateImage(row3.transform, "Pack2Icon",
-                new Vector2(-120, 0), new Vector2(50, 50), KokoPack2Green);
-            CreateTMPChild(row3.transform, "Pack2Label", "KOKO KRUNCH PACK\n+10 POINTS",
-                200, 60, TextAlignmentOptions.Left, White, 18, FontStyles.Normal,
-                new Vector2(30, 0));
+                new Vector2(0, yStart + yStep * 2), new Vector2(350, 90), new Color(1, 1, 1, 0));
+            var pack2Icon = CreateImage(row3.transform, "Pack2Icon",
+                new Vector2(-120, 0), new Vector2(60, 60), White);
+            SetImageSprite(pack2Icon, "kokokrunch strawbery.png");
+            var pts10b = CreateImage(row3.transform, "10PointsImage2",
+                new Vector2(30, 0), new Vector2(120, 50), White);
+            SetImageSprite(pts10b, "10 points.png");
 
             // Rules
             CreateTMPChild(canvas.transform, "RulesText",
                 "3 LIVES  |  30 SECONDS\nMissed item = Lose 1 life",
                 350, 60, TextAlignmentOptions.Center, White, 16, FontStyles.Italic,
-                new Vector2(0, -100));
+                new Vector2(0, -120));
 
-            // Next Button
-            var nextBtn = CreateButton(canvas.transform, "NextButton", "NEXT",
-                new Vector2(0, -250), new Vector2(200, 60), ButtonPink, TextDark, 28);
+            // Next Button (use image asset)
+            var nextBtn = CreateImage(canvas.transform, "NextButton",
+                new Vector2(0, -250), new Vector2(200, 70), White);
+            SetImageSprite(nextBtn, "next buttton.png");
+            nextBtn.AddComponent<Button>().targetGraphic = nextBtn.GetComponent<Image>();
 
             // Wire up InstructionUI
             var instUI = canvas.AddComponent<KoKoKrunch.UI.InstructionUI>();
             var so = new SerializedObject(instUI);
-            so.FindProperty("nextButton").objectReferenceValue = nextBtn.GetComponent<Button>();
+            so.FindProperty("nextButton").objectReferenceValue = nextBtn.GetComponentInChildren<Button>();
             so.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/InstructionScene.unity");
@@ -437,10 +485,12 @@ namespace KoKoKrunch.Editor
             hlg.childForceExpandHeight = false;
 
             Image[] heartIcons = new Image[3];
+            string[] lifeImages = { "life 1.png", "life 2.png", "life 3.png" };
             for (int i = 0; i < 3; i++)
             {
                 var heart = CreateImage(heartsPanel.transform, $"Heart{i}",
                     Vector2.zero, new Vector2(30, 30), HeartRed);
+                SetImageSprite(heart, lifeImages[i]);
                 heartIcons[i] = heart.GetComponent<Image>();
                 var le = heart.AddComponent<LayoutElement>();
                 le.preferredWidth = 30;
@@ -517,7 +567,8 @@ namespace KoKoKrunch.Editor
             // Background sprite for game area
             GameObject bgObj = new GameObject("GameBackground");
             var bgSR = bgObj.AddComponent<SpriteRenderer>();
-            bgSR.sprite = CreatePlaceholderSprite("game_bg", 450, 800, BgPink);
+            var bgSprite = LoadImageSprite("background.png");
+            bgSR.sprite = bgSprite != null ? bgSprite : CreatePlaceholderSprite("game_bg", 450, 800, BgPink);
             bgSR.sortingOrder = -10;
             bgObj.transform.localScale = new Vector3(5f, 8f, 1f);
 
@@ -536,27 +587,45 @@ namespace KoKoKrunch.Editor
             GameObject canvas = CreateCanvas();
             CreateBackground(canvas.transform);
 
-            // Congratulations text
-            var congratsText = CreateTMPChild(canvas.transform, "CongratsText", "CONGRATULATIONS",
-                400, 60, TextAlignmentOptions.Center, White, 32, FontStyles.Bold,
-                new Vector2(0, 150));
+            // Congratulations image
+            var congratsImg = CreateImage(canvas.transform, "CongratsImage",
+                new Vector2(0, 250), new Vector2(350, 80), White);
+            SetImageSprite(congratsImg, "congratulations.png");
 
-            // Score
+            // Final Score label image
+            var finalScoreImg = CreateImage(canvas.transform, "FinalScoreImage",
+                new Vector2(0, 150), new Vector2(250, 60), White);
+            SetImageSprite(finalScoreImg, "final score.png");
+
+            // Score box background
+            var scoreBox = CreateImage(canvas.transform, "ScoreBox",
+                new Vector2(0, 50), new Vector2(200, 100), White);
+            SetImageSprite(scoreBox, "score box.png");
+
+            // Score text (overlaid on score box)
             var scoreText = CreateTMPChild(canvas.transform, "ScoreText", "00",
-                300, 120, TextAlignmentOptions.Center, White, 96, FontStyles.Bold,
-                new Vector2(0, 30));
+                200, 100, TextAlignmentOptions.Center, White, 72, FontStyles.Bold,
+                new Vector2(0, 50));
+
+            // Congratulations text (hidden, used for code reference)
+            var congratsText = CreateTMPChild(canvas.transform, "CongratsText", "",
+                1, 1, TextAlignmentOptions.Center, new Color(1, 1, 1, 0), 1,
+                FontStyles.Normal, new Vector2(0, 400));
 
             // Mascot
-            CreateImage(canvas.transform, "MascotImage",
-                new Vector2(0, -100), new Vector2(120, 120), CatcherYellow);
+            var mascot = CreateImage(canvas.transform, "MascotImage",
+                new Vector2(0, -80), new Vector2(150, 150), White);
+            SetImageSprite(mascot, "kokokrunch.png");
 
             // Leaderboard Button
             var lbBtn = CreateButton(canvas.transform, "LeaderboardButton", "LEADERBOARD",
                 new Vector2(0, -230), new Vector2(250, 55), ButtonPink, TextDark, 22);
 
-            // Play Again Button
-            var playBtn = CreateButton(canvas.transform, "PlayAgainButton", "PLAY AGAIN",
-                new Vector2(0, -300), new Vector2(250, 55), White, TextDark, 22);
+            // Play Again Button (use start button image)
+            var playBtn = CreateImage(canvas.transform, "PlayAgainButton",
+                new Vector2(0, -310), new Vector2(200, 60), White);
+            SetImageSprite(playBtn, "start button.png");
+            playBtn.AddComponent<Button>().targetGraphic = playBtn.GetComponent<Image>();
 
             // Wire up ResultUI
             var resultUI = canvas.AddComponent<KoKoKrunch.UI.ResultUI>();
@@ -564,7 +633,7 @@ namespace KoKoKrunch.Editor
             so.FindProperty("scoreText").objectReferenceValue = scoreText.GetComponent<TextMeshProUGUI>();
             so.FindProperty("congratsText").objectReferenceValue = congratsText.GetComponent<TextMeshProUGUI>();
             so.FindProperty("leaderboardButton").objectReferenceValue = lbBtn.GetComponent<Button>();
-            so.FindProperty("playAgainButton").objectReferenceValue = playBtn.GetComponent<Button>();
+            so.FindProperty("playAgainButton").objectReferenceValue = playBtn.GetComponentInChildren<Button>();
             so.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/ResultScene.unity");
@@ -582,14 +651,19 @@ namespace KoKoKrunch.Editor
             GameObject canvas = CreateCanvas();
             CreateBackground(canvas.transform);
 
-            // Title / Logo area
-            CreateTMPChild(canvas.transform, "LeaderboardTitle", "LEADERBOARD",
-                350, 50, TextAlignmentOptions.Center, White, 28, FontStyles.Bold,
-                new Vector2(0, 330));
+            // Leaderboard page background/header image
+            var lbHeaderImg = CreateImage(canvas.transform, "LeaderboardHeaderImage",
+                new Vector2(0, 330), new Vector2(350, 60), White);
+            SetImageSprite(lbHeaderImg, "learderboard page.png");
 
             // Top player highlight
             var topPanel = CreatePanel(canvas.transform, "TopPlayerPanel",
                 new Vector2(0, 240), new Vector2(350, 100), new Color(1, 1, 1, 0.15f));
+
+            // Number 1 image
+            var num1Img = CreateImage(topPanel.transform, "Num1Image",
+                new Vector2(-140, 0), new Vector2(40, 40), White);
+            SetImageSprite(num1Img, "number 1.png");
 
             var topRank = CreateTMPChild(topPanel.transform, "TopRankText", "#1",
                 50, 40, TextAlignmentOptions.Center, Gold, 28, FontStyles.Bold,
@@ -639,9 +713,16 @@ namespace KoKoKrunch.Editor
 
             scrollView.content = contentRect;
 
-            // Buttons
-            var playBtn = CreateButton(canvas.transform, "PlayAgainButton", "PLAY AGAIN",
-                new Vector2(0, -310), new Vector2(250, 50), ButtonPink, TextDark, 22);
+            // Scoreboard logo
+            var sbLogo = CreateImage(canvas.transform, "ScoreboardLogo",
+                new Vector2(0, 150), new Vector2(200, 50), White);
+            SetImageSprite(sbLogo, "scoreboard logo.png");
+
+            // Play Again Button
+            var playBtn = CreateImage(canvas.transform, "PlayAgainButton",
+                new Vector2(0, -310), new Vector2(200, 60), White);
+            SetImageSprite(playBtn, "start button.png");
+            playBtn.AddComponent<Button>().targetGraphic = playBtn.GetComponent<Image>();
 
             // Wire up LeaderboardUI
             var lbUI = canvas.AddComponent<KoKoKrunch.UI.LeaderboardUI>();
@@ -653,7 +734,7 @@ namespace KoKoKrunch.Editor
 
             var entryPrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabsPath}/UI/LeaderboardEntryRow.prefab");
             so.FindProperty("leaderboardEntryPrefab").objectReferenceValue = entryPrefab;
-            so.FindProperty("playAgainButton").objectReferenceValue = playBtn.GetComponent<Button>();
+            so.FindProperty("playAgainButton").objectReferenceValue = playBtn.GetComponentInChildren<Button>();
             so.ApplyModifiedPropertiesWithoutUndo();
 
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/LeaderboardScene.unity");
@@ -1215,7 +1296,7 @@ namespace KoKoKrunch.Editor
         {
             GameObject es = new GameObject("EventSystem");
             es.AddComponent<EventSystem>();
-            es.AddComponent<StandaloneInputModule>();
+            es.AddComponent<InputSystemUIInputModule>();
         }
 
         private static GameObject CreateCanvas()
@@ -1243,7 +1324,17 @@ namespace KoKoKrunch.Editor
             rect.sizeDelta = Vector2.zero;
 
             var img = bg.AddComponent<Image>();
-            img.color = BgPink;
+            var bgSprite = LoadImageSprite("background.png");
+            if (bgSprite != null)
+            {
+                img.sprite = bgSprite;
+                img.color = Color.white;
+                img.preserveAspect = false;
+            }
+            else
+            {
+                img.color = BgPink;
+            }
         }
 
         private static GameObject CreatePanel(Transform parent, string name,
