@@ -9,6 +9,7 @@ namespace KoKoKrunch.Data
         [Header("Scoring")]
         public int strawberryPoints = 5;
         public int kokoKrunchPoints = 10;
+        public int winScoreThreshold = 50;
 
         [Header("Difficulty")]
         public float itemFallSpeed = 4f;
@@ -33,6 +34,7 @@ namespace KoKoKrunch.Data
             {
                 strawberryPoints = config.strawberryPoints,
                 kokoKrunchPoints = config.kokoKrunchPoints,
+                winScoreThreshold = config.winScoreThreshold,
                 itemFallSpeed = config.itemFallSpeed,
                 maxFallSpeed = config.maxFallSpeed,
                 fallSpeedIncrease = config.fallSpeedIncrease,
@@ -49,6 +51,7 @@ namespace KoKoKrunch.Data
         {
             config.strawberryPoints = strawberryPoints;
             config.kokoKrunchPoints = kokoKrunchPoints;
+            config.winScoreThreshold = winScoreThreshold;
             config.itemFallSpeed = itemFallSpeed;
             config.maxFallSpeed = maxFallSpeed;
             config.fallSpeedIncrease = fallSpeedIncrease;

@@ -42,14 +42,14 @@ namespace KoKoKrunch.Gameplay
         public void OnCaught()
         {
             GameManager.Instance.AddScore(GetPoints());
-            AudioManager.Instance?.PlayCatchSFX();
+            AudioManager.Instance?.PlayCatchCorrectSFX();
             Destroy(gameObject);
         }
 
         private void OnMissed()
         {
             GameManager.Instance.LoseLife();
-            AudioManager.Instance?.PlayMissSFX();
+            AudioManager.Instance?.PlayCatchWrongSFX();
             Destroy(gameObject);
         }
     }

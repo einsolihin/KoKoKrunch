@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 namespace KoKoKrunch.Managers
@@ -12,12 +13,19 @@ namespace KoKoKrunch.Managers
     {
         public static ScreensaverManager Instance { get; private set; }
 
-        private const float InactivityTimeout = 40f;
+        [Header("Settings")]
+        [SerializeField] private float inactivityTimeout = 40f;
+
+        [Header("Video")]
+        [SerializeField] private VideoClip advertisementClip;
+
         private float inactivityTimer;
         private bool screensaverActive;
 
         private Canvas screensaverCanvas;
         private GameObject screensaverOverlay;
+        private VideoPlayer videoPlayer;
+        private RenderTexture renderTexture;
         private Vector2 lastMousePosition;
 
         private void Awake()
@@ -41,6 +49,12 @@ namespace KoKoKrunch.Managers
         private void OnDestroy()
         {
             EnhancedTouchSupport.Disable();
+
+            if (renderTexture != null)
+            {
+                renderTexture.Release();
+                Destroy(renderTexture);
+            }
         }
 
         private void Update()
@@ -104,19 +118,33 @@ namespace KoKoKrunch.Managers
 
         public void ResetTimer()
         {
-            inactivityTimer = InactivityTimeout;
+            inactivityTimer = inactivityTimeout;
         }
 
         private void ActivateScreensaver()
         {
             screensaverActive = true;
             screensaverOverlay.SetActive(true);
+
+            // Stop any BGM and play video
+            AudioManager.Instance?.StopBGM();
+
+            if (videoPlayer != null && advertisementClip != null)
+            {
+                videoPlayer.clip = advertisementClip;
+                videoPlayer.isLooping = true;
+                videoPlayer.Play();
+            }
         }
 
         private void DismissScreensaver()
         {
             screensaverActive = false;
             screensaverOverlay.SetActive(false);
+
+            if (videoPlayer != null)
+                videoPlayer.Stop();
+
             ResetTimer();
             SceneLoader.LoadLanding();
         }
@@ -129,7 +157,7 @@ namespace KoKoKrunch.Managers
 
             screensaverCanvas = canvasObj.AddComponent<Canvas>();
             screensaverCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            screensaverCanvas.sortingOrder = 999; // On top of everything
+            screensaverCanvas.sortingOrder = 999;
 
             var scaler = canvasObj.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
@@ -138,7 +166,7 @@ namespace KoKoKrunch.Managers
 
             canvasObj.AddComponent<GraphicRaycaster>();
 
-            // Fullscreen dark overlay
+            // Fullscreen overlay container
             screensaverOverlay = new GameObject("ScreensaverOverlay");
             screensaverOverlay.transform.SetParent(canvasObj.transform, false);
 
@@ -148,24 +176,34 @@ namespace KoKoKrunch.Managers
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
 
-            var img = screensaverOverlay.AddComponent<Image>();
-            img.color = new Color(0f, 0f, 0f, 0.95f);
+            // Black background behind video
+            var bgImg = screensaverOverlay.AddComponent<Image>();
+            bgImg.color = Color.black;
 
-            // Optional: "Touch to continue" text
-            var textObj = new GameObject("ScreensaverText");
-            textObj.transform.SetParent(screensaverOverlay.transform, false);
+            // RenderTexture for video output
+            renderTexture = new RenderTexture(1080, 1920, 0);
+            renderTexture.Create();
 
-            var textRect = textObj.AddComponent<RectTransform>();
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = Vector2.zero;
-            textRect.offsetMax = Vector2.zero;
+            // VideoPlayer on this manager GameObject
+            videoPlayer = gameObject.AddComponent<VideoPlayer>();
+            videoPlayer.playOnAwake = false;
+            videoPlayer.renderMode = VideoRenderMode.RenderTexture;
+            videoPlayer.targetTexture = renderTexture;
+            videoPlayer.isLooping = true;
+            videoPlayer.audioOutputMode = VideoAudioOutputMode.Direct;
 
-            var tmp = textObj.AddComponent<TMPro.TextMeshProUGUI>();
-            tmp.text = "Touch to continue";
-            tmp.fontSize = 28f;
-            tmp.color = new Color(1f, 1f, 1f, 0.5f);
-            tmp.alignment = TMPro.TextAlignmentOptions.Center;
+            // RawImage to display the video
+            var videoObj = new GameObject("VideoDisplay");
+            videoObj.transform.SetParent(screensaverOverlay.transform, false);
+
+            var videoRect = videoObj.AddComponent<RectTransform>();
+            videoRect.anchorMin = Vector2.zero;
+            videoRect.anchorMax = Vector2.one;
+            videoRect.offsetMin = Vector2.zero;
+            videoRect.offsetMax = Vector2.zero;
+
+            var rawImage = videoObj.AddComponent<RawImage>();
+            rawImage.texture = renderTexture;
 
             screensaverOverlay.SetActive(false);
         }

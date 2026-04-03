@@ -16,6 +16,7 @@ namespace KoKoKrunch.Managers
         public int CurrentLives { get; private set; }
         public float TimeRemaining { get; private set; }
         public bool IsGameActive { get; private set; }
+        public bool IsWin { get; private set; }
 
         public event Action<int> OnScoreChanged;
         public event Action<int> OnLivesChanged;
@@ -96,6 +97,7 @@ namespace KoKoKrunch.Managers
         private void EndGame()
         {
             IsGameActive = false;
+            IsWin = CurrentLives > 0 && CurrentScore >= config.winScoreThreshold;
             OnGameOver?.Invoke();
 
             DataManager.Instance.SavePlayerScore(PlayerName, CurrentScore);

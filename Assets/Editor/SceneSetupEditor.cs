@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.Video;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using TMPro;
@@ -29,17 +30,29 @@ namespace KoKoKrunch.Editor
         private static string PrefabsPath => "Assets/Prefabs";
         private static string ImagesPath => "Assets/Images";
         private static string FontsPath => "Assets/Fonts";
+        private static string AudioPath => "Assets/Audio";
+        private static string AnimationsPath => "Assets/Animations";
 
-        [MenuItem("KoKo Krunch/Setup All Scenes and Prefabs")]
-        public static void SetupAll()
+        // When false, LoadImageSprite always returns null → scenes/prefabs use placeholders
+        private static bool includeAssets = false;
+
+        // ──────────────────────────────────────────────
+        // Menu Item 1: Structure only (placeholders)
+        // ──────────────────────────────────────────────
+        [MenuItem("KoKo Krunch/1. Setup Scenes && Prefabs")]
+        public static void SetupScenesAndPrefabs()
         {
-            if (!EditorUtility.DisplayDialog("KoKo Krunch Setup",
-                "This will create all 6 scenes, prefabs, and GameConfig.\nExisting files with the same names will be overwritten.\n\nProceed?",
-                "Yes, Set Up Everything", "Cancel"))
+            if (!EditorUtility.DisplayDialog("Setup Scenes & Prefabs",
+                "This will create all scenes, prefabs, and GameConfig with placeholder assets.\n" +
+                "Existing files with the same names will be overwritten.\n\nProceed?",
+                "Yes, Set Up Structure", "Cancel"))
                 return;
+
+            includeAssets = false;
 
             EnsureDirectories();
             CreateGameConfig();
+            CreateManagersPrefab();
             CreateItemPrefabs();
             CreatePlayerPrefab();
             CreateLeaderboardEntryPrefab();
@@ -55,12 +68,97 @@ namespace KoKoKrunch.Editor
             AddScenesToBuildSettings();
 
             EditorUtility.DisplayDialog("Setup Complete",
-                "All scenes, prefabs, and config have been created!\n\n" +
-                "Next steps:\n" +
-                "1. Open LandingScene\n" +
-                "2. Create a persistent GameObject and add GameManager, DataManager, AudioManager\n" +
-                "3. Assign the GameConfig asset to GameManager\n" +
-                "4. Hit Play to test!",
+                "All scenes and prefabs created with placeholders.\n\n" +
+                "Next: Run 'KoKo Krunch > 2. Setup Assets' to wire in\n" +
+                "images, audio clips, and video.\n\n" +
+                "You can also manually edit the ManagersPrefab in:\n" +
+                "  Assets/Resources/ManagersPrefab",
+                "Got it!");
+        }
+
+        // ──────────────────────────────────────────────
+        // Menu Item 2: Wire real assets into existing prefabs/scenes
+        // ──────────────────────────────────────────────
+        [MenuItem("KoKo Krunch/2. Setup Assets")]
+        public static void SetupAssets()
+        {
+            if (!EditorUtility.DisplayDialog("Setup Assets",
+                "This will wire images, audio, and video into existing prefabs and scenes.\n" +
+                "Make sure you have run 'Setup Scenes & Prefabs' first.\n\nProceed?",
+                "Yes, Wire Assets", "Cancel"))
+                return;
+
+            int updated = 0;
+
+            // 1. ManagersPrefab — audio clips, video, GameConfig
+            updated += AssignManagersAssets() ? 1 : 0;
+
+            // 2. Item prefabs — real sprites
+            updated += AssignItemPrefabSprites() ? 1 : 0;
+
+            // 3. Player prefab — real sprite (if available)
+            updated += AssignPlayerPrefabSprite() ? 1 : 0;
+
+            // 4. Scenes — wire images into existing scene GameObjects
+            updated += AssignSceneAssets("LandingScene", new Dictionary<string, string> {
+                { "LogoImage", "logo kokokrunch.png" },
+                { "CatchWinImage", "catch n win.png" },
+                { "StartButton", "start button.png" },
+                { "MascotImage", "kokokrunch.png" },
+                { "Background", "background.png" },
+            }) ? 1 : 0;
+
+            updated += AssignSceneAssets("NameInputScene", new Dictionary<string, string> {
+                { "NameLabelImage", "name .png" },
+                { "NameBoxImage", "name box.png" },
+                { "NextButton", "next buttton.png" },
+                { "MascotImage", "kokokrunch.png" },
+                { "Background", "background.png" },
+            }) ? 1 : 0;
+
+            updated += AssignSceneAssets("InstructionScene", new Dictionary<string, string> {
+                { "StrawberryIcon", "strawberry.png" },
+                { "5PointsImage", "5 points.png" },
+                { "Pack1Icon", "kokokrunch ori.png" },
+                { "10PointsImage1", "10 points.png" },
+                { "Pack2Icon", "kokokrunch strawbery.png" },
+                { "10PointsImage2", "10 points.png" },
+                { "NextButton", "next buttton.png" },
+                { "Background", "background.png" },
+            }) ? 1 : 0;
+
+            updated += AssignSceneAssets("GameScene", new Dictionary<string, string> {
+                { "Heart0", "life 1.png" },
+                { "Heart1", "life 2.png" },
+                { "Heart2", "life 3.png" },
+            }) ? 1 : 0;
+
+            // GameScene also has a SpriteRenderer background
+            AssignGameSceneBackground();
+
+            updated += AssignSceneAssets("ResultScene", new Dictionary<string, string> {
+                { "CongratsImage", "congratulations.png" },
+                { "FinalScoreImage", "final score.png" },
+                { "ScoreBox", "score box.png" },
+                { "MascotImage", "kokokrunch.png" },
+                { "PlayAgainButton", "start button.png" },
+                { "Background", "background.png" },
+            }) ? 1 : 0;
+
+            updated += AssignSceneAssets("LeaderboardScene", new Dictionary<string, string> {
+                { "LeaderboardHeaderImage", "learderboard page.png" },
+                { "Num1Image", "number 1.png" },
+                { "ScoreboardLogo", "scoreboard logo.png" },
+                { "PlayAgainButton", "start button.png" },
+                { "Background", "background.png" },
+            }) ? 1 : 0;
+
+            AssetDatabase.SaveAssets();
+
+            EditorUtility.DisplayDialog("Assets Setup Complete",
+                $"Updated {updated} prefabs/scenes with real assets.\n\n" +
+                "You can re-run this anytime after adding or replacing\n" +
+                "image/audio files to re-wire them.",
                 "Got it!");
         }
 
@@ -137,6 +235,7 @@ namespace KoKoKrunch.Editor
 
         private static Sprite LoadImageSprite(string filename)
         {
+            if (!includeAssets) return null;
             string path = $"{ImagesPath}/{filename}";
             var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
             if (sprite == null)
@@ -163,6 +262,63 @@ namespace KoKoKrunch.Editor
                 img.color = Color.white;
                 img.preserveAspect = true;
             }
+        }
+
+        // ──────────────────────────────────────────────
+        // Managers Prefab (structure only — assets wired by Setup Assets)
+        // ──────────────────────────────────────────────
+        private static void CreateManagersPrefab()
+        {
+            string resourcesPath = "Assets/Resources";
+            if (!AssetDatabase.IsValidFolder(resourcesPath))
+                AssetDatabase.CreateFolder("Assets", "Resources");
+
+            string path = "Assets/Resources/ManagersPrefab.prefab";
+
+            GameObject obj = new GameObject("--- Managers ---");
+
+            // GameManager
+            var gm = obj.AddComponent<KoKoKrunch.Managers.GameManager>();
+            var configAsset = AssetDatabase.LoadAssetAtPath<KoKoKrunch.Data.GameConfig>("Assets/Resources/GameConfig.asset");
+            if (configAsset != null)
+            {
+                var gmSo = new SerializedObject(gm);
+                gmSo.FindProperty("config").objectReferenceValue = configAsset;
+                gmSo.ApplyModifiedPropertiesWithoutUndo();
+            }
+
+            // DataManager
+            obj.AddComponent<KoKoKrunch.Managers.DataManager>();
+
+            // AudioManager with two AudioSources (clips assigned via Setup Assets)
+            var bgmSource = obj.AddComponent<AudioSource>();
+            bgmSource.playOnAwake = false;
+            bgmSource.loop = true;
+            bgmSource.volume = 0.5f;
+
+            var sfxSource = obj.AddComponent<AudioSource>();
+            sfxSource.playOnAwake = false;
+            sfxSource.loop = false;
+            sfxSource.volume = 1f;
+
+            var am = obj.AddComponent<KoKoKrunch.Managers.AudioManager>();
+            var amSo = new SerializedObject(am);
+            amSo.FindProperty("bgmSource").objectReferenceValue = bgmSource;
+            amSo.FindProperty("sfxSource").objectReferenceValue = sfxSource;
+            amSo.ApplyModifiedPropertiesWithoutUndo();
+
+            // SettingsManager
+            obj.AddComponent<KoKoKrunch.Managers.SettingsManager>();
+
+            // ScreensaverManager (video clip assigned via Setup Assets)
+            obj.AddComponent<KoKoKrunch.Managers.ScreensaverManager>();
+
+            // AdminExitManager
+            obj.AddComponent<KoKoKrunch.Managers.AdminExitManager>();
+
+            PrefabUtility.SaveAsPrefabAsset(obj, path);
+            Object.DestroyImmediate(obj);
+            Debug.Log($"ManagersPrefab created at {path} (structure only — run Setup Assets to wire audio/video).");
         }
 
         // ──────────────────────────────────────────────
@@ -1254,6 +1410,245 @@ namespace KoKoKrunch.Editor
             Debug.Log($"Prefab created: {path}");
         }
         #endregion
+
+        // ──────────────────────────────────────────────
+        // ASSET ASSIGNMENT METHODS (used by Setup Assets)
+        // ──────────────────────────────────────────────
+
+        private static bool AssignManagersAssets()
+        {
+            string path = "Assets/Resources/ManagersPrefab.prefab";
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null)
+            {
+                Debug.LogWarning($"[Setup Assets] ManagersPrefab not found at {path}. Run Setup Scenes & Prefabs first.");
+                return false;
+            }
+
+            // Open prefab for editing
+            var instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+
+            // AudioManager — assign clips
+            var am = instance.GetComponent<KoKoKrunch.Managers.AudioManager>();
+            if (am != null)
+            {
+                var amSo = new SerializedObject(am);
+
+                var menuBGM = AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioPath}/BGM/FASSounds_Fun.wav");
+                var gameBGM = AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioPath}/BGM/KokoBG_V1.mp3");
+                var winBGM = AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioPath}/BGM/Win Result.mp3");
+                var loseBGM = AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioPath}/BGM/Lost result.mp3");
+                var catchCorrectSFX = AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioPath}/SFX/Catch-correct.mp3");
+                var catchWrongSFX = AssetDatabase.LoadAssetAtPath<AudioClip>($"{AudioPath}/SFX/Catch-wrong.mp3");
+
+                amSo.FindProperty("menuBGM").objectReferenceValue = menuBGM;
+                amSo.FindProperty("gameBGM").objectReferenceValue = gameBGM;
+                amSo.FindProperty("winBGM").objectReferenceValue = winBGM;
+                amSo.FindProperty("loseBGM").objectReferenceValue = loseBGM;
+                amSo.FindProperty("catchCorrectSFX").objectReferenceValue = catchCorrectSFX;
+                amSo.FindProperty("catchWrongSFX").objectReferenceValue = catchWrongSFX;
+                amSo.ApplyModifiedPropertiesWithoutUndo();
+
+                int clipCount = (menuBGM ? 1 : 0) + (gameBGM ? 1 : 0) + (winBGM ? 1 : 0)
+                    + (loseBGM ? 1 : 0) + (catchCorrectSFX ? 1 : 0) + (catchWrongSFX ? 1 : 0);
+                Debug.Log($"[Setup Assets] AudioManager: {clipCount}/6 clips assigned.");
+            }
+
+            // ScreensaverManager — assign video clip
+            var sm = instance.GetComponent<KoKoKrunch.Managers.ScreensaverManager>();
+            if (sm != null)
+            {
+                var videoClip = AssetDatabase.LoadAssetAtPath<VideoClip>($"{AnimationsPath}/KKR Advertisement.mp4");
+                if (videoClip != null)
+                {
+                    var smSo = new SerializedObject(sm);
+                    smSo.FindProperty("advertisementClip").objectReferenceValue = videoClip;
+                    smSo.ApplyModifiedPropertiesWithoutUndo();
+                    Debug.Log("[Setup Assets] ScreensaverManager: video clip assigned.");
+                }
+                else
+                {
+                    Debug.LogWarning("[Setup Assets] Video not found at Assets/Animations/KKR Advertisement.mp4");
+                }
+            }
+
+            // GameManager — ensure GameConfig is assigned
+            var gm = instance.GetComponent<KoKoKrunch.Managers.GameManager>();
+            if (gm != null)
+            {
+                var configAsset = AssetDatabase.LoadAssetAtPath<KoKoKrunch.Data.GameConfig>("Assets/Resources/GameConfig.asset");
+                if (configAsset != null)
+                {
+                    var gmSo = new SerializedObject(gm);
+                    gmSo.FindProperty("config").objectReferenceValue = configAsset;
+                    gmSo.ApplyModifiedPropertiesWithoutUndo();
+                }
+            }
+
+            PrefabUtility.SaveAsPrefabAsset(instance, path);
+            Object.DestroyImmediate(instance);
+            Debug.Log("[Setup Assets] ManagersPrefab updated.");
+            return true;
+        }
+
+        private static bool AssignItemPrefabSprites()
+        {
+            bool updated = false;
+
+            var itemMap = new Dictionary<string, string> {
+                { "Strawberry", "strawberry.png" },
+                { "KokoKrunchPack1", "kokokrunch ori.png" },
+                { "KokoKrunchPack2", "kokokrunch strawbery.png" },
+            };
+
+            foreach (var kvp in itemMap)
+            {
+                string path = $"{PrefabsPath}/Items/{kvp.Key}.prefab";
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (prefab == null)
+                {
+                    Debug.LogWarning($"[Setup Assets] Prefab not found: {path}");
+                    continue;
+                }
+
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{ImagesPath}/{kvp.Value}");
+                if (sprite == null)
+                {
+                    Debug.LogWarning($"[Setup Assets] Image not found: {ImagesPath}/{kvp.Value}");
+                    continue;
+                }
+
+                var instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+                var sr = instance.GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    sr.sprite = sprite;
+                    PrefabUtility.SaveAsPrefabAsset(instance, path);
+                    Debug.Log($"[Setup Assets] {kvp.Key} sprite updated.");
+                    updated = true;
+                }
+                Object.DestroyImmediate(instance);
+            }
+
+            return updated;
+        }
+
+        private static bool AssignPlayerPrefabSprite()
+        {
+            string path = $"{PrefabsPath}/Player/Catcher.prefab";
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null) return false;
+
+            // Check if a catcher image exists
+            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{ImagesPath}/catcher.png");
+            if (sprite == null) return false;
+
+            var instance = PrefabUtility.InstantiatePrefab(prefab) as GameObject;
+            var sr = instance.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.sprite = sprite;
+                PrefabUtility.SaveAsPrefabAsset(instance, path);
+                Debug.Log("[Setup Assets] Catcher sprite updated.");
+            }
+            Object.DestroyImmediate(instance);
+            return true;
+        }
+
+        private static bool AssignSceneAssets(string sceneName, Dictionary<string, string> imageMap)
+        {
+            string scenePath = $"{ScenesPath}/{sceneName}.unity";
+            if (!File.Exists(scenePath))
+            {
+                Debug.LogWarning($"[Setup Assets] Scene not found: {scenePath}");
+                return false;
+            }
+
+            var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            bool changed = false;
+
+            foreach (var kvp in imageMap)
+            {
+                string objectName = kvp.Key;
+                string imageFile = kvp.Value;
+
+                var sprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{ImagesPath}/{imageFile}");
+                if (sprite == null)
+                {
+                    Debug.LogWarning($"[Setup Assets] Image not found: {ImagesPath}/{imageFile}");
+                    continue;
+                }
+
+                var target = FindInScene(scene, objectName);
+                if (target == null)
+                {
+                    Debug.LogWarning($"[Setup Assets] GameObject '{objectName}' not found in {sceneName}");
+                    continue;
+                }
+
+                var img = target.GetComponent<Image>();
+                if (img != null)
+                {
+                    img.sprite = sprite;
+                    img.color = Color.white;
+                    img.preserveAspect = true;
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                EditorSceneManager.SaveScene(scene);
+                Debug.Log($"[Setup Assets] {sceneName} images updated.");
+            }
+
+            return changed;
+        }
+
+        private static void AssignGameSceneBackground()
+        {
+            // GameScene has a SpriteRenderer background, not a UI Image
+            string scenePath = $"{ScenesPath}/GameScene.unity";
+            if (!File.Exists(scenePath)) return;
+
+            var scene = EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            var bgSprite = AssetDatabase.LoadAssetAtPath<Sprite>($"{ImagesPath}/background.png");
+            if (bgSprite == null) return;
+
+            var bgObj = FindInScene(scene, "GameBackground");
+            if (bgObj == null) return;
+
+            var sr = bgObj.GetComponent<SpriteRenderer>();
+            if (sr != null)
+            {
+                sr.sprite = bgSprite;
+                EditorSceneManager.SaveScene(scene);
+                Debug.Log("[Setup Assets] GameScene background sprite updated.");
+            }
+        }
+
+        // ── Scene search helper ──
+
+        private static GameObject FindInScene(UnityEngine.SceneManagement.Scene scene, string name)
+        {
+            foreach (var root in scene.GetRootGameObjects())
+            {
+                var found = FindRecursive(root.transform, name);
+                if (found != null) return found.gameObject;
+            }
+            return null;
+        }
+
+        private static Transform FindRecursive(Transform parent, string name)
+        {
+            if (parent.name == name) return parent;
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var found = FindRecursive(parent.GetChild(i), name);
+                if (found != null) return found;
+            }
+            return null;
+        }
 
         // ──────────────────────────────────────────────
         // Build Settings

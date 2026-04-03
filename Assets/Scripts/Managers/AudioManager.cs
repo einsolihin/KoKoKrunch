@@ -13,12 +13,13 @@ namespace KoKoKrunch.Managers
         [Header("BGM Clips")]
         [SerializeField] private AudioClip menuBGM;
         [SerializeField] private AudioClip gameBGM;
+        [SerializeField] private AudioClip winBGM;
+        [SerializeField] private AudioClip loseBGM;
 
         [Header("SFX Clips")]
-        [SerializeField] private AudioClip catchSFX;
-        [SerializeField] private AudioClip missSFX;
+        [SerializeField] private AudioClip catchCorrectSFX;
+        [SerializeField] private AudioClip catchWrongSFX;
         [SerializeField] private AudioClip buttonClickSFX;
-        [SerializeField] private AudioClip gameOverSFX;
 
         private void Awake()
         {
@@ -29,8 +30,9 @@ namespace KoKoKrunch.Managers
             }
 
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
+
+        // ── BGM ──
 
         public void PlayMenuBGM()
         {
@@ -42,16 +44,29 @@ namespace KoKoKrunch.Managers
             PlayBGM(gameBGM);
         }
 
+        public void PlayWinBGM()
+        {
+            PlayBGM(winBGM);
+        }
+
+        public void PlayLoseBGM()
+        {
+            PlayBGM(loseBGM);
+        }
+
         public void StopBGM()
         {
             if (bgmSource != null)
                 bgmSource.Stop();
         }
 
-        public void PlayCatchSFX() => PlaySFX(catchSFX);
-        public void PlayMissSFX() => PlaySFX(missSFX);
+        // ── SFX ──
+
+        public void PlayCatchCorrectSFX() => PlaySFX(catchCorrectSFX);
+        public void PlayCatchWrongSFX() => PlaySFX(catchWrongSFX);
         public void PlayButtonClickSFX() => PlaySFX(buttonClickSFX);
-        public void PlayGameOverSFX() => PlaySFX(gameOverSFX);
+
+        // ── Internal ──
 
         private void PlayBGM(AudioClip clip)
         {

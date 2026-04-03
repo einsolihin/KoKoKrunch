@@ -60,7 +60,6 @@ namespace KoKoKrunch.UI
         private void OnGameOver()
         {
             AudioManager.Instance?.StopBGM();
-            AudioManager.Instance?.PlayGameOverSFX();
 
             Invoke(nameof(GoToResult), 1.5f);
         }

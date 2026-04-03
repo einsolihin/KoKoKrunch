@@ -12,6 +12,7 @@ namespace KoKoKrunch.Data
         [Header("Scoring")]
         public int strawberryPoints = 5;
         public int kokoKrunchPoints = 10;
+        public int winScoreThreshold = 50;
 
         [Header("Spawning")]
         public float initialSpawnInterval = 1.2f;

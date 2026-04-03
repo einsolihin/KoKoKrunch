@@ -16,10 +16,18 @@ namespace KoKoKrunch.UI
         private void Start()
         {
             int score = GameManager.Instance.CurrentScore;
+            bool isWin = GameManager.Instance.IsWin;
+
             scoreText.text = score.ToString();
 
             if (congratsText != null)
-                congratsText.text = "CONGRATULATIONS";
+                congratsText.text = isWin ? "CONGRATULATIONS" : "BETTER LUCK NEXT TIME";
+
+            // Play win or lose BGM (loops until leaving this page)
+            if (isWin)
+                AudioManager.Instance?.PlayWinBGM();
+            else
+                AudioManager.Instance?.PlayLoseBGM();
 
             if (leaderboardButton != null)
                 leaderboardButton.onClick.AddListener(OnLeaderboardClicked);
