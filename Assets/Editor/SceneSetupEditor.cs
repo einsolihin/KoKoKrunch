@@ -146,10 +146,7 @@ namespace KoKoKrunch.Editor
             }) ? 1 : 0;
 
             updated += AssignSceneAssets("LeaderboardScene", new Dictionary<string, string> {
-                { "LeaderboardHeaderImage", "learderboard page.png" },
-                { "Num1Image", "number 1.png" },
-                { "ScoreboardLogo", "scoreboard logo.png" },
-                { "PlayAgainButton", "start button.png" },
+                { "LogoImage", "logo kokokrunch.png" },
                 { "Background", "background.png" },
             }) ? 1 : 0;
 
@@ -392,20 +389,40 @@ namespace KoKoKrunch.Editor
 
             GameObject row = new GameObject("LeaderboardEntryRow");
             var rowRect = row.AddComponent<RectTransform>();
-            rowRect.sizeDelta = new Vector2(400, 30);
+            rowRect.sizeDelta = new Vector2(400, 36);
+
+            // Row background — white with slight transparency for the bar look
+            var rowImg = row.AddComponent<Image>();
+            rowImg.color = new Color(1f, 1f, 1f, 0.6f);
+
+            row.AddComponent<LayoutElement>().preferredHeight = 36;
 
             var hlg = row.AddComponent<HorizontalLayoutGroup>();
             hlg.childAlignment = TextAnchor.MiddleLeft;
             hlg.spacing = 10;
+            hlg.padding = new RectOffset(15, 15, 0, 0);
             hlg.childForceExpandWidth = false;
-            hlg.childForceExpandHeight = false;
+            hlg.childForceExpandHeight = true;
+            hlg.childControlWidth = true;
+            hlg.childControlHeight = true;
+
+            Color rowTextColor = new Color(0.3f, 0.1f, 0.15f, 1f);
 
             // Rank
-            CreateTMPChild(row.transform, "RankText", "#1", 50, 30, TextAlignmentOptions.Left, White, 14);
+            var rankObj = CreateTMPChild(row.transform, "RankText", "#4",
+                50, 36, TextAlignmentOptions.Left, rowTextColor, 16, FontStyles.Bold);
+            rankObj.AddComponent<LayoutElement>().preferredWidth = 50;
+
             // Name
-            CreateTMPChild(row.transform, "NameText", "PLAYER", 200, 30, TextAlignmentOptions.Left, White, 14);
+            var nameObj = CreateTMPChild(row.transform, "NameText", "PLAYER",
+                200, 36, TextAlignmentOptions.Left, rowTextColor, 16, FontStyles.Bold);
+            var nameLe = nameObj.AddComponent<LayoutElement>();
+            nameLe.flexibleWidth = 1;
+
             // Score
-            CreateTMPChild(row.transform, "ScoreText", "0 POINTS", 140, 30, TextAlignmentOptions.Right, White, 14);
+            var scoreObj = CreateTMPChild(row.transform, "ScoreText", "0 POINTS",
+                120, 36, TextAlignmentOptions.Right, rowTextColor, 16, FontStyles.Bold);
+            scoreObj.AddComponent<LayoutElement>().preferredWidth = 120;
 
             row.AddComponent<KoKoKrunch.UI.LeaderboardEntry>();
 
@@ -807,47 +824,77 @@ namespace KoKoKrunch.Editor
             GameObject canvas = CreateCanvas();
             CreateBackground(canvas.transform);
 
-            // Leaderboard page background/header image
-            var lbHeaderImg = CreateImage(canvas.transform, "LeaderboardHeaderImage",
-                new Vector2(0, 330), new Vector2(350, 60), White);
-            SetImageSprite(lbHeaderImg, "learderboard page.png");
+            // ── Logo at top ──
+            var logoImg = CreateImage(canvas.transform, "LogoImage",
+                new Vector2(0, 330), new Vector2(280, 140), White);
+            SetImageSprite(logoImg, "logo kokokrunch.png");
 
-            // Top player highlight
-            var topPanel = CreatePanel(canvas.transform, "TopPlayerPanel",
-                new Vector2(0, 240), new Vector2(350, 100), new Color(1, 1, 1, 0.15f));
+            // ════════════════════════════════════════
+            // PODIUM: Top 3 players
+            // ════════════════════════════════════════
 
-            // Number 1 image
-            var num1Img = CreateImage(topPanel.transform, "Num1Image",
-                new Vector2(-140, 0), new Vector2(40, 40), White);
-            SetImageSprite(num1Img, "number 1.png");
+            // ── #1 (Center, large) ──
+            var top1Panel = CreatePanel(canvas.transform, "Top1Panel",
+                new Vector2(0, 185), new Vector2(300, 80), new Color(1, 1, 1, 0));
 
-            var topRank = CreateTMPChild(topPanel.transform, "TopRankText", "#1",
-                50, 40, TextAlignmentOptions.Center, Gold, 28, FontStyles.Bold,
-                new Vector2(-130, 0));
-            var topName = CreateTMPChild(topPanel.transform, "TopNameText", "---",
-                180, 40, TextAlignmentOptions.Left, White, 24, FontStyles.Bold,
-                new Vector2(0, 10));
-            var topScore = CreateTMPChild(topPanel.transform, "TopScoreText", "0 POINTS",
-                180, 30, TextAlignmentOptions.Left, Gold, 18, FontStyles.Normal,
-                new Vector2(0, -20));
+            var top1Rank = CreateTMPChild(top1Panel.transform, "Top1RankText", "#1",
+                300, 40, TextAlignmentOptions.Center, White, 36, FontStyles.Bold,
+                new Vector2(0, 20));
+            var top1Name = CreateTMPChild(top1Panel.transform, "Top1NameText", "---",
+                300, 30, TextAlignmentOptions.Center, White, 22, FontStyles.Bold,
+                new Vector2(0, -15));
+            var top1Score = CreateTMPChild(top1Panel.transform, "Top1ScoreText", "0 POINTS",
+                300, 25, TextAlignmentOptions.Center, White, 18, FontStyles.Normal,
+                new Vector2(0, -38));
 
-            // Scrollable leaderboard list
+            // ── #2 (Left) ──
+            var top2Panel = CreatePanel(canvas.transform, "Top2Panel",
+                new Vector2(-140, 105), new Vector2(160, 60), new Color(1, 1, 1, 0));
+
+            var top2Rank = CreateTMPChild(top2Panel.transform, "Top2RankText", "#2",
+                160, 30, TextAlignmentOptions.Center, White, 24, FontStyles.Bold,
+                new Vector2(0, 12));
+            var top2Name = CreateTMPChild(top2Panel.transform, "Top2NameText", "---",
+                160, 20, TextAlignmentOptions.Center, White, 14, FontStyles.Bold,
+                new Vector2(0, -8));
+            var top2Score = CreateTMPChild(top2Panel.transform, "Top2ScoreText", "0 POINTS",
+                160, 18, TextAlignmentOptions.Center, White, 12, FontStyles.Normal,
+                new Vector2(0, -24));
+
+            // ── #3 (Right) ──
+            var top3Panel = CreatePanel(canvas.transform, "Top3Panel",
+                new Vector2(140, 105), new Vector2(160, 60), new Color(1, 1, 1, 0));
+
+            var top3Rank = CreateTMPChild(top3Panel.transform, "Top3RankText", "#3",
+                160, 30, TextAlignmentOptions.Center, White, 24, FontStyles.Bold,
+                new Vector2(0, 12));
+            var top3Name = CreateTMPChild(top3Panel.transform, "Top3NameText", "---",
+                160, 20, TextAlignmentOptions.Center, White, 14, FontStyles.Bold,
+                new Vector2(0, -8));
+            var top3Score = CreateTMPChild(top3Panel.transform, "Top3ScoreText", "0 POINTS",
+                160, 18, TextAlignmentOptions.Center, White, 12, FontStyles.Normal,
+                new Vector2(0, -24));
+
+            // ════════════════════════════════════════
+            // Scrollable list: #4 onwards
+            // ════════════════════════════════════════
             var scrollObj = new GameObject("ScrollView");
             scrollObj.transform.SetParent(canvas.transform, false);
-            var scrollRect = scrollObj.AddComponent<RectTransform>();
-            scrollRect.anchoredPosition = new Vector2(0, -50);
-            scrollRect.sizeDelta = new Vector2(400, 400);
+            var scrollRectTransform = scrollObj.AddComponent<RectTransform>();
+            scrollRectTransform.anchoredPosition = new Vector2(0, -170);
+            scrollRectTransform.sizeDelta = new Vector2(420, 450);
 
             var scrollView = scrollObj.AddComponent<ScrollRect>();
             scrollView.horizontal = false;
+            scrollView.movementType = ScrollRect.MovementType.Clamped;
 
             var scrollImage = scrollObj.AddComponent<Image>();
-            scrollImage.color = new Color(0, 0, 0, 0.1f);
+            scrollImage.color = new Color(0, 0, 0, 0); // transparent
 
             var mask = scrollObj.AddComponent<Mask>();
-            mask.showMaskGraphic = true;
+            mask.showMaskGraphic = false;
 
-            // Content
+            // Content container
             var contentObj = new GameObject("Content");
             contentObj.transform.SetParent(scrollObj.transform, false);
             var contentRect = contentObj.AddComponent<RectTransform>();
@@ -855,43 +902,50 @@ namespace KoKoKrunch.Editor
             contentRect.anchorMax = new Vector2(1, 1);
             contentRect.pivot = new Vector2(0.5f, 1);
             contentRect.anchoredPosition = Vector2.zero;
-            contentRect.sizeDelta = new Vector2(0, 600);
+            contentRect.sizeDelta = new Vector2(0, 0);
 
             var vlg = contentObj.AddComponent<VerticalLayoutGroup>();
             vlg.childAlignment = TextAnchor.UpperCenter;
-            vlg.spacing = 5;
-            vlg.padding = new RectOffset(10, 10, 10, 10);
+            vlg.spacing = 4;
+            vlg.padding = new RectOffset(5, 5, 5, 5);
             vlg.childForceExpandWidth = true;
             vlg.childForceExpandHeight = false;
+            vlg.childControlWidth = true;
+            vlg.childControlHeight = true;
 
             var csf = contentObj.AddComponent<ContentSizeFitter>();
             csf.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             scrollView.content = contentRect;
 
-            // Scoreboard logo
-            var sbLogo = CreateImage(canvas.transform, "ScoreboardLogo",
-                new Vector2(0, 150), new Vector2(200, 50), White);
-            SetImageSprite(sbLogo, "scoreboard logo.png");
-
-            // Play Again Button
-            var playBtn = CreateImage(canvas.transform, "PlayAgainButton",
-                new Vector2(0, -310), new Vector2(200, 60), White);
-            SetImageSprite(playBtn, "start button.png");
-            playBtn.AddComponent<Button>().targetGraphic = playBtn.GetComponent<Image>();
-
-            // Wire up LeaderboardUI
+            // ── Wire up LeaderboardUI ──
             var lbUI = canvas.AddComponent<KoKoKrunch.UI.LeaderboardUI>();
             var so = new SerializedObject(lbUI);
-            so.FindProperty("topPlayerRankText").objectReferenceValue = topRank.GetComponent<TextMeshProUGUI>();
-            so.FindProperty("topPlayerNameText").objectReferenceValue = topName.GetComponent<TextMeshProUGUI>();
-            so.FindProperty("topPlayerScoreText").objectReferenceValue = topScore.GetComponent<TextMeshProUGUI>();
-            so.FindProperty("leaderboardContent").objectReferenceValue = contentRect;
 
+            // Top 1
+            so.FindProperty("top1RankText").objectReferenceValue = top1Rank.GetComponent<TextMeshProUGUI>();
+            so.FindProperty("top1NameText").objectReferenceValue = top1Name.GetComponent<TextMeshProUGUI>();
+            so.FindProperty("top1ScoreText").objectReferenceValue = top1Score.GetComponent<TextMeshProUGUI>();
+
+            // Top 2
+            so.FindProperty("top2RankText").objectReferenceValue = top2Rank.GetComponent<TextMeshProUGUI>();
+            so.FindProperty("top2NameText").objectReferenceValue = top2Name.GetComponent<TextMeshProUGUI>();
+            so.FindProperty("top2ScoreText").objectReferenceValue = top2Score.GetComponent<TextMeshProUGUI>();
+
+            // Top 3
+            so.FindProperty("top3RankText").objectReferenceValue = top3Rank.GetComponent<TextMeshProUGUI>();
+            so.FindProperty("top3NameText").objectReferenceValue = top3Name.GetComponent<TextMeshProUGUI>();
+            so.FindProperty("top3ScoreText").objectReferenceValue = top3Score.GetComponent<TextMeshProUGUI>();
+
+            // List
+            so.FindProperty("leaderboardContent").objectReferenceValue = contentRect;
             var entryPrefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{PrefabsPath}/UI/LeaderboardEntryRow.prefab");
             so.FindProperty("leaderboardEntryPrefab").objectReferenceValue = entryPrefab;
-            so.FindProperty("playAgainButton").objectReferenceValue = playBtn.GetComponentInChildren<Button>();
+
             so.ApplyModifiedPropertiesWithoutUndo();
+
+            // Add ScreenSetup
+            canvas.AddComponent<KoKoKrunch.Utils.ScreenSetup>();
 
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/LeaderboardScene.unity");
             Debug.Log("LeaderboardScene created");

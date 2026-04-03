@@ -10,12 +10,22 @@ namespace KoKoKrunch.UI
 {
     public class LeaderboardUI : MonoBehaviour
     {
-        [Header("Top Player")]
-        [SerializeField] private TextMeshProUGUI topPlayerRankText;
-        [SerializeField] private TextMeshProUGUI topPlayerNameText;
-        [SerializeField] private TextMeshProUGUI topPlayerScoreText;
+        [Header("Top 1 (Center)")]
+        [SerializeField] private TextMeshProUGUI top1RankText;
+        [SerializeField] private TextMeshProUGUI top1NameText;
+        [SerializeField] private TextMeshProUGUI top1ScoreText;
 
-        [Header("Leaderboard List")]
+        [Header("Top 2 (Left)")]
+        [SerializeField] private TextMeshProUGUI top2RankText;
+        [SerializeField] private TextMeshProUGUI top2NameText;
+        [SerializeField] private TextMeshProUGUI top2ScoreText;
+
+        [Header("Top 3 (Right)")]
+        [SerializeField] private TextMeshProUGUI top3RankText;
+        [SerializeField] private TextMeshProUGUI top3NameText;
+        [SerializeField] private TextMeshProUGUI top3ScoreText;
+
+        [Header("Leaderboard List (#4+)")]
         [SerializeField] private Transform leaderboardContent;
         [SerializeField] private GameObject leaderboardEntryPrefab;
 
@@ -24,6 +34,7 @@ namespace KoKoKrunch.UI
 
         private void Start()
         {
+            AudioManager.Instance?.PlayMenuBGM();
             PopulateLeaderboard();
 
             if (playAgainButton != null)
@@ -34,30 +45,58 @@ namespace KoKoKrunch.UI
         {
             List<PlayerData> entries = DataManager.Instance.GetLeaderboard();
 
-            if (entries.Count > 0)
-            {
-                var top = entries[0];
-                if (topPlayerRankText != null) topPlayerRankText.text = "#1";
-                if (topPlayerNameText != null) topPlayerNameText.text = top.playerName;
-                if (topPlayerScoreText != null) topPlayerScoreText.text = $"{top.score} POINTS";
-            }
+            // Top 1
+            SetTopPlayer(top1RankText, top1NameText, top1ScoreText, entries, 0);
 
+            // Top 2
+            SetTopPlayer(top2RankText, top2NameText, top2ScoreText, entries, 1);
+
+            // Top 3
+            SetTopPlayer(top3RankText, top3NameText, top3ScoreText, entries, 2);
+
+            // Clear existing list entries
             foreach (Transform child in leaderboardContent)
             {
                 Destroy(child.gameObject);
             }
 
-            for (int i = 0; i < entries.Count; i++)
+            // Populate #4 onwards
+            for (int i = 3; i < entries.Count; i++)
             {
                 GameObject entryObj = Instantiate(leaderboardEntryPrefab, leaderboardContent);
-                var texts = entryObj.GetComponentsInChildren<TextMeshProUGUI>();
-
-                if (texts.Length >= 3)
+                var entry = entryObj.GetComponent<LeaderboardEntry>();
+                if (entry != null)
                 {
-                    texts[0].text = $"#{i + 1}";
-                    texts[1].text = entries[i].playerName;
-                    texts[2].text = $"{entries[i].score} POINTS";
+                    entry.SetData(i + 1, entries[i].playerName, entries[i].score);
                 }
+                else
+                {
+                    // Fallback: find texts by component order
+                    var texts = entryObj.GetComponentsInChildren<TextMeshProUGUI>();
+                    if (texts.Length >= 3)
+                    {
+                        texts[0].text = $"#{i + 1}";
+                        texts[1].text = entries[i].playerName;
+                        texts[2].text = $"{entries[i].score} POINTS";
+                    }
+                }
+            }
+        }
+
+        private void SetTopPlayer(TextMeshProUGUI rankText, TextMeshProUGUI nameText,
+            TextMeshProUGUI scoreText, List<PlayerData> entries, int index)
+        {
+            if (index < entries.Count)
+            {
+                if (rankText != null) rankText.text = $"#{index + 1}";
+                if (nameText != null) nameText.text = entries[index].playerName;
+                if (scoreText != null) scoreText.text = $"{entries[index].score} POINTS";
+            }
+            else
+            {
+                if (rankText != null) rankText.text = $"#{index + 1}";
+                if (nameText != null) nameText.text = "---";
+                if (scoreText != null) scoreText.text = "0 POINTS";
             }
         }
 
