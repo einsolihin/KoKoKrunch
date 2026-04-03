@@ -887,6 +887,7 @@ GameObject:
   - component: {fileID: 1927091158}
   - component: {fileID: 1927091157}
   - component: {fileID: 1927091159}
+  - component: {fileID: 1927091160}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1004,6 +1005,14 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!81 &1927091160
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927091156}
+  m_Enabled: 1
 --- !u!1 &2013386765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,8 +1046,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d1ad699462ed45c1a5c9a27305f7e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KoKoKrunch.Utils.ScreenSetup
-  targetWidth: 450
-  targetHeight: 800
+  targetWidth: 1080
+  targetHeight: 1920
 --- !u!114 &2013386767
 MonoBehaviour:
   m_ObjectHideFlags: 0

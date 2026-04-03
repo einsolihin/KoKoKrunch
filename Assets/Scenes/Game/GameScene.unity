@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 240494921}
   - component: {fileID: 240494920}
   - component: {fileID: 240494922}
+  - component: {fileID: 240494923}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -247,6 +248,14 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!81 &240494923
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240494919}
+  m_Enabled: 1
 --- !u!1 &336350113
 GameObject:
   m_ObjectHideFlags: 0
@@ -1736,7 +1745,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4481216779726305928, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.6666666
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4481216779726305928, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1744,7 +1753,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4481216779726305928, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -34
+      value: -35
       objectReference: {fileID: 0}
     - target: {fileID: 4481216779726305928, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1780,7 +1789,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4481216779726305928, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_ConstrainProportionsScale
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7439551541575423335, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
+      propertyPath: boundaryLeft
+      value: -16
+      objectReference: {fileID: 0}
+    - target: {fileID: 7439551541575423335, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
+      propertyPath: boundaryRight
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 8192722120755455062, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_Sprite

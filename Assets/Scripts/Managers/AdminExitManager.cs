@@ -5,6 +5,7 @@ using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
 using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
+using KoKoKrunch.Utils;
 
 namespace KoKoKrunch.Managers
 {
@@ -13,6 +14,7 @@ namespace KoKoKrunch.Managers
         public static AdminExitManager Instance { get; private set; }
 
         private const string ExitPassword = "kokokrushexit";
+        private const string AdminPassword = "kokokrushadmin";
         private const int RequiredTaps = 5;
         private const float TapResetTimeout = 3f;
         private const float CornerSize = 0.15f; // 15% of screen from top-right
@@ -122,6 +124,12 @@ namespace KoKoKrunch.Managers
                 Application.Quit();
 #endif
             }
+            else if (passwordInput.text == AdminPassword)
+            {
+                Debug.Log("[AdminExit] Admin password entered. Loading admin scene.");
+                HidePasswordPopup();
+                SceneLoader.LoadAdmin();
+            }
             else
             {
                 if (errorText != null)
@@ -184,7 +192,7 @@ namespace KoKoKrunch.Managers
             titleRect.sizeDelta = new Vector2(0, 40);
 
             var titleTmp = titleObj.AddComponent<TextMeshProUGUI>();
-            titleTmp.text = "Admin Exit";
+            titleTmp.text = "Enter Admin Password";
             titleTmp.fontSize = 24f;
             titleTmp.color = new Color(0.9f, 0.75f, 0.2f, 1f);
             titleTmp.alignment = TextAlignmentOptions.Center;

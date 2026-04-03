@@ -303,8 +303,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 164fdc11e18c049fc88af20df5d9348f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KoKoKrunch.Managers.ScreensaverManager
-  inactivityTimeout: 40
-  advertisementClip: {fileID: 32900000, guid: fcd036ba1ea7b40f4baede1a4d7444cc, type: 3}
+  inactivityTimeout: 30
+  advertisementClip: {fileID: 32900000, guid: 72465216516b64fa59b84b13fb260a0c, type: 3}
 --- !u!114 &6759657131593138091
 MonoBehaviour:
   m_ObjectHideFlags: 0
