@@ -12,16 +12,19 @@ namespace KoKoKrunch.UI
     {
         [Header("Top 1 (Center)")]
         [SerializeField] private TextMeshProUGUI top1RankText;
+        [SerializeField] private TextMeshProUGUI top1NameScoreText;
         [SerializeField] private TextMeshProUGUI top1NameText;
         [SerializeField] private TextMeshProUGUI top1ScoreText;
 
         [Header("Top 2 (Left)")]
         [SerializeField] private TextMeshProUGUI top2RankText;
+        [SerializeField] private TextMeshProUGUI top2NameScoreText;
         [SerializeField] private TextMeshProUGUI top2NameText;
         [SerializeField] private TextMeshProUGUI top2ScoreText;
 
         [Header("Top 3 (Right)")]
         [SerializeField] private TextMeshProUGUI top3RankText;
+        [SerializeField] private TextMeshProUGUI top3NameScoreText;
         [SerializeField] private TextMeshProUGUI top3NameText;
         [SerializeField] private TextMeshProUGUI top3ScoreText;
 
@@ -46,13 +49,13 @@ namespace KoKoKrunch.UI
             List<PlayerData> entries = DataManager.Instance.GetLeaderboard();
 
             // Top 1
-            SetTopPlayer(top1RankText, top1NameText, top1ScoreText, entries, 0);
+            SetTopPlayer(top1RankText, top1NameText, top1ScoreText, top1NameScoreText, entries, 0);
 
             // Top 2
-            SetTopPlayer(top2RankText, top2NameText, top2ScoreText, entries, 1);
+            SetTopPlayer(top2RankText, top2NameText, top2ScoreText, top2NameScoreText, entries, 1);
 
             // Top 3
-            SetTopPlayer(top3RankText, top3NameText, top3ScoreText, entries, 2);
+            SetTopPlayer(top3RankText, top3NameText, top3ScoreText, top3NameScoreText, entries, 2);
 
             // Clear existing list entries
             foreach (Transform child in leaderboardContent)
@@ -84,19 +87,22 @@ namespace KoKoKrunch.UI
         }
 
         private void SetTopPlayer(TextMeshProUGUI rankText, TextMeshProUGUI nameText,
-            TextMeshProUGUI scoreText, List<PlayerData> entries, int index)
+            TextMeshProUGUI scoreText, TextMeshProUGUI nameScoreText, List<PlayerData> entries, int index)
         {
             if (index < entries.Count)
             {
                 if (rankText != null) rankText.text = $"#{index + 1}";
                 if (nameText != null) nameText.text = entries[index].playerName;
                 if (scoreText != null) scoreText.text = $"{entries[index].score} POINTS";
+                if (nameScoreText != null) nameScoreText.text = $"{entries[index].playerName} {entries[index].score} POINTS";
+
             }
             else
             {
                 if (rankText != null) rankText.text = $"#{index + 1}";
-                if (nameText != null) nameText.text = "---";
+                if (nameText != null) nameText.text = "XXXX";
                 if (scoreText != null) scoreText.text = "0 POINTS";
+                if (nameScoreText != null) nameScoreText.text = "XXXX 0 POINTS";
             }
         }
 

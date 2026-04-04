@@ -16,11 +16,12 @@ MonoBehaviour:
   gameDuration: 30
   strawberryPoints: 5
   kokoKrunchPoints: 10
+  winScoreThreshold: 50
   initialSpawnInterval: 1.2
   minimumSpawnInterval: 0.5
   spawnAcceleration: 0.02
-  itemFallSpeed: 4
-  maxFallSpeed: 8
-  fallSpeedIncrease: 0.1
+  itemFallSpeed: 20
+  maxFallSpeed: 40
+  fallSpeedIncrease: 2
   maxLeaderboardEntries: 20
   playerMoveSpeed: 8

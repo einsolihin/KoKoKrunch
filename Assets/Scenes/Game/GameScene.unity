@@ -504,10 +504,10 @@ MonoBehaviour:
   strawberryPrefab: {fileID: 1428191099440050852, guid: 1b40ec762654444b8b0d8b3a373ccc09, type: 3}
   kokoKrunchPack1Prefab: {fileID: 1327967969228778469, guid: fb11883e783d74007b596d11c0a63aa7, type: 3}
   kokoKrunchPack2Prefab: {fileID: 5741597122649341994, guid: d98936bad6e054a5098b2365846113c1, type: 3}
-  spawnYPosition: 6
-  spawnXMin: -2.5
-  spawnXMax: 2.5
-  bottomBoundary: -6
+  spawnYPosition: 30
+  spawnXMin: -16
+  spawnXMax: 16
+  bottomBoundary: -50
 --- !u!4 &955001228
 Transform:
   m_ObjectHideFlags: 0
@@ -1126,7 +1126,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -24.3, y: 78.5}
+  m_AnchoredPosition: {x: -30, y: 80}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1695372718
@@ -1263,8 +1263,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100.7, y: 33.8}
-  m_SizeDelta: {x: 150, y: 150}
+  m_AnchoredPosition: {x: 100, y: 30}
+  m_SizeDelta: {x: 300, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1725919946
 CanvasRenderer:
@@ -1294,7 +1294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 00
+  m_text: 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e339867c7307f4b63936aa8780d65995, type: 2}
   m_sharedMaterial: {fileID: 5706749373426248025, guid: e339867c7307f4b63936aa8780d65995, type: 2}
@@ -1321,8 +1321,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 170
-  m_fontSizeBase: 170
+  m_fontSize: 150
+  m_fontSizeBase: 150
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
