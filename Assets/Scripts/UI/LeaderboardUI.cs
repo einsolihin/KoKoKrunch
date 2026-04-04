@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using KoKoKrunch.Data;
 using KoKoKrunch.Managers;
@@ -35,8 +36,13 @@ namespace KoKoKrunch.UI
         [Header("Buttons")]
         [SerializeField] private Button playAgainButton;
 
+        [SerializeField]
+        private float delayNextScene = 0.5f; // Delay before allowing scene change (to prevent accidental clicks)
+        private bool canChangeScene = false;
+
         private void Start()
         {
+            StartCoroutine(EnableSceneChangeAfterDelay());
             AudioManager.Instance?.PlayMenuBGM();
             PopulateLeaderboard();
 
@@ -47,6 +53,7 @@ namespace KoKoKrunch.UI
         private void PopulateLeaderboard()
         {
             List<PlayerData> entries = DataManager.Instance.GetLeaderboard();
+            int maxLeaderboardEntries = GameManager.Instance.Config.maxLeaderboardEntries;
 
             // Top 1
             SetTopPlayer(top1RankText, top1NameText, top1ScoreText, top1NameScoreText, entries, 0);
@@ -64,23 +71,44 @@ namespace KoKoKrunch.UI
             }
 
             // Populate #4 onwards
-            for (int i = 3; i < entries.Count; i++)
+            for (int i = 3; i < maxLeaderboardEntries; i++)
             {
                 GameObject entryObj = Instantiate(leaderboardEntryPrefab, leaderboardContent);
                 var entry = entryObj.GetComponent<LeaderboardEntry>();
-                if (entry != null)
+
+                if (entries.Count <=i)
                 {
-                    entry.SetData(i + 1, entries[i].playerName, entries[i].score);
-                }
-                else
-                {
-                    // Fallback: find texts by component order
-                    var texts = entryObj.GetComponentsInChildren<TextMeshProUGUI>();
-                    if (texts.Length >= 3)
+                    if (entry != null)
                     {
-                        texts[0].text = $"#{i + 1}";
-                        texts[1].text = entries[i].playerName;
-                        texts[2].text = $"{entries[i].score} POINTS";
+                        entry.SetData(i + 1, "EMPTY", 0);
+                    }
+                    else
+                    {
+                        // Fallback: find texts by component order
+                        var texts = entryObj.GetComponentsInChildren<TextMeshProUGUI>();
+                        if (texts.Length >= 3)
+                        {
+                            texts[0].text = $"#{i + 1}";
+                            texts[1].text = "EMPTY";
+                            texts[2].text = "0 POINTS";
+                        }
+                    }
+                }
+                else{
+                    if (entry != null)
+                    {
+                        entry.SetData(i + 1, entries[i].playerName, entries[i].score);
+                    }
+                    else
+                    {
+                        // Fallback: find texts by component order
+                        var texts = entryObj.GetComponentsInChildren<TextMeshProUGUI>();
+                        if (texts.Length >= 3)
+                        {
+                            texts[0].text = $"#{i + 1}";
+                            texts[1].text = entries[i].playerName;
+                            texts[2].text = $"{entries[i].score} POINTS";
+                        }
                     }
                 }
             }
@@ -104,6 +132,13 @@ namespace KoKoKrunch.UI
                 if (scoreText != null) scoreText.text = "0 POINTS";
                 if (nameScoreText != null) nameScoreText.text = "XXXX 0 POINTS";
             }
+        }
+
+        IEnumerator EnableSceneChangeAfterDelay()
+        {
+            canChangeScene = false;
+            yield return new WaitForSeconds(delayNextScene);
+            canChangeScene = true;
         }
 
         private void OnPlayAgainClicked()

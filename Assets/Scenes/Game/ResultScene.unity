@@ -1311,6 +1311,7 @@ MonoBehaviour:
   congratsText: {fileID: 1900579465}
   leaderboardButton: {fileID: 1265678855}
   playAgainButton: {fileID: 1247859818}
+  delayNextScene: 0.5
 --- !u!114 &2013386767
 MonoBehaviour:
   m_ObjectHideFlags: 0
