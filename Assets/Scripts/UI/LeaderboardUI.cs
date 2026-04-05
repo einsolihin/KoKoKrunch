@@ -80,7 +80,7 @@ namespace KoKoKrunch.UI
                 {
                     if (entry != null)
                     {
-                        entry.SetData(i + 1, "EMPTY", 0);
+                        entry.SetData(i + 1, " ", 0);
                     }
                     else
                     {
@@ -130,7 +130,7 @@ namespace KoKoKrunch.UI
                 if (rankText != null) rankText.text = $"#{index + 1}";
                 if (nameText != null) nameText.text = " ";
                 if (scoreText != null) scoreText.text = "0 POINTS";
-                if (nameScoreText != null) nameScoreText.text = "XXXX 0 POINTS";
+                if (nameScoreText != null) nameScoreText.text = "  0 POINTS";
             }
         }
 
