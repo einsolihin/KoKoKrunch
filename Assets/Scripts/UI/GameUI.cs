@@ -1,7 +1,9 @@
+using System.Collections;
 using KoKoKrunch.Managers;
 using KoKoKrunch.Utils;
 using Spine.Unity;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,9 +15,11 @@ namespace KoKoKrunch.UI
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private TextMeshProUGUI timerText;
         [SerializeField] private GameObject[] heartIcons;
+        [SerializeField] private SkeletonGraphic scoreSkeleton;
 
         private void Start()
         {
+            StartCoroutine(PlayScoreAnimation());
             AudioManager.Instance?.PlayGameBGM();
             GameManager.Instance.StartGame();
 
@@ -38,7 +42,13 @@ namespace KoKoKrunch.UI
             GameManager.Instance.OnTimeChanged -= UpdateTimer;
             GameManager.Instance.OnGameOver -= OnGameOver;
         }
+        IEnumerator PlayScoreAnimation()
+        {
+            if (scoreSkeleton == null) yield break;
 
+            yield return new WaitForSeconds(1f);
+            scoreSkeleton.AnimationState.GetCurrent(0).TimeScale = 0f;
+        }
         private void UpdateScore(int score)
         {
             scoreText.text = score.ToString("D2");

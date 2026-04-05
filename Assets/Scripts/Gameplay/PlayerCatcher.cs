@@ -1,4 +1,5 @@
 using KoKoKrunch.Managers;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.EnhancedTouch;
@@ -31,7 +32,6 @@ namespace KoKoKrunch.Gameplay
         private void Update()
         {
             if (!GameManager.Instance.IsGameActive) return;
-
             HandleInput();
         }
 
