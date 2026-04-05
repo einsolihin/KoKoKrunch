@@ -89,7 +89,7 @@ namespace KoKoKrunch.UI
                         if (texts.Length >= 3)
                         {
                             texts[0].text = $"#{i + 1}";
-                            texts[1].text = "EMPTY";
+                            texts[1].text = " ";
                             texts[2].text = "0 POINTS";
                         }
                     }
@@ -128,7 +128,7 @@ namespace KoKoKrunch.UI
             else
             {
                 if (rankText != null) rankText.text = $"#{index + 1}";
-                if (nameText != null) nameText.text = "XXXX";
+                if (nameText != null) nameText.text = " ";
                 if (scoreText != null) scoreText.text = "0 POINTS";
                 if (nameScoreText != null) nameScoreText.text = "XXXX 0 POINTS";
             }

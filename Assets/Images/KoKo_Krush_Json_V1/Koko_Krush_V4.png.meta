@@ -1,0 +1,672 @@
+fileFormatVersion: 2
+guid: 1280c85aff5214d7e9a5c1dc9073d0bc
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1026049044617997408
+    second: Koko_Krush_V4_0
+  - first:
+      213: -1775484571574478758
+    second: Koko_Krush_V4_1
+  - first:
+      213: 730935048112732999
+    second: Koko_Krush_V4_2
+  - first:
+      213: 6039661770150872211
+    second: Koko_Krush_V4_3
+  - first:
+      213: 4737701430743822047
+    second: Koko_Krush_V4_4
+  - first:
+      213: 7880272491392549848
+    second: Koko_Krush_V4_5
+  - first:
+      213: 1040471434418818440
+    second: Koko_Krush_V4_6
+  - first:
+      213: -1722471183170788363
+    second: Koko_Krush_V4_7
+  - first:
+      213: 7243853108980347955
+    second: Koko_Krush_V4_8
+  - first:
+      213: 8328275069020312703
+    second: Koko_Krush_V4_9
+  - first:
+      213: 1740234054230821700
+    second: Koko_Krush_V4_10
+  - first:
+      213: 5869915221336935982
+    second: Koko_Krush_V4_11
+  - first:
+      213: -2123023430311117262
+    second: Koko_Krush_V4_12
+  - first:
+      213: -7845559731185060002
+    second: Koko_BG/Koko_BG_000
+  - first:
+      213: 4649759246373521662
+    second: Koko_BG/Koko_BG_060
+  - first:
+      213: 4494671264895890035
+    second: Nestle
+  - first:
+      213: 6136024018372168110
+    second: ScoreShape
+  - first:
+      213: 5539327851999111205
+    second: Strawberry_Text
+  - first:
+      213: -1740783045540147931
+    second: life 1
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: iOS
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Koko_Krush_V4_0
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1344
+        width: 1922
+        height: 1082
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06ca59a7b224d3e00800000000000000
+      internalID: 1026049044617997408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_1
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 360
+        width: 2025
+        height: 984
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a58dd1760363c57e0800000000000000
+      internalID: -1775484571574478758
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_2
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 2
+        width: 355
+        height: 159
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74b74a8bd8dc42a00800000000000000
+      internalID: 730935048112732999
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_3
+      rect:
+        serializedVersion: 2
+        x: 482
+        y: 5
+        width: 72
+        height: 157
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3948955616031d350800000000000000
+      internalID: 6039661770150872211
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_4
+      rect:
+        serializedVersion: 2
+        x: 557
+        y: 5
+        width: 35
+        height: 158
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fde685f8952bfb140800000000000000
+      internalID: 4737701430743822047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_5
+      rect:
+        serializedVersion: 2
+        x: 604
+        y: 136
+        width: 106
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d34cb6541a5c5d60800000000000000
+      internalID: 7880272491392549848
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_6
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: 2
+        width: 222
+        height: 212
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 88d8977c14f707e00800000000000000
+      internalID: 1040471434418818440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_7
+      rect:
+        serializedVersion: 2
+        x: 1009
+        y: 2
+        width: 1622
+        height: 358
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5f3224fb59d8818e0800000000000000
+      internalID: -1722471183170788363
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_8
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 1
+        width: 118
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 334f1e5e506578460800000000000000
+      internalID: 7243853108980347955
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_9
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 1
+        width: 117
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7492b8dc0af39370800000000000000
+      internalID: 8328275069020312703
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_10
+      rect:
+        serializedVersion: 2
+        x: 382
+        y: 2
+        width: 104
+        height: 121
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 44b4774f6ad862810800000000000000
+      internalID: 1740234054230821700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_11
+      rect:
+        serializedVersion: 2
+        x: 598
+        y: 3
+        width: 116
+        height: 122
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e2e427d2bc0267150800000000000000
+      internalID: 5869915221336935982
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_Krush_V4_12
+      rect:
+        serializedVersion: 2
+        x: 730
+        y: 3
+        width: 51
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 23e797a30718982e0800000000000000
+      internalID: -2123023430311117262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_BG/Koko_BG_000
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 505
+        width: 1080
+        height: 1920
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e57fa96fdf8fe1390800000000000000
+      internalID: -7845559731185060002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Koko_BG/Koko_BG_060
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 505
+        width: 1080
+        height: 1920
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ef88e2b2663478040800000000000000
+      internalID: 4649759246373521662
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Nestle
+      rect:
+        serializedVersion: 2
+        x: 126
+        y: 2
+        width: 654
+        height: 163
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 372764e93b7406e30800000000000000
+      internalID: 4494671264895890035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ScoreShape
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 361
+        width: 2023
+        height: 982
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea9865ca559872550800000000000000
+      internalID: 6136024018372168110
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Strawberry_Text
+      rect:
+        serializedVersion: 2
+        x: 1010
+        y: 2
+        width: 1620
+        height: 357
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 528a5d03555afdc40800000000000000
+      internalID: 5539327851999111205
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: life 1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 2
+        width: 122
+        height: 100
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52d8e8b0b0f77d7e0800000000000000
+      internalID: -1740783045540147931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: strawberry
+      rect:
+        serializedVersion: 2
+        x: 782
+        y: -9
+        width: 215
+        height: 226
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 
+      internalID: 0
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Koko_BG/Koko_BG_000: -7845559731185060002
+      Koko_BG/Koko_BG_060: 4649759246373521662
+      Koko_Krush_V4_0: 1026049044617997408
+      Koko_Krush_V4_1: -1775484571574478758
+      Koko_Krush_V4_10: 1740234054230821700
+      Koko_Krush_V4_11: 5869915221336935982
+      Koko_Krush_V4_12: -2123023430311117262
+      Koko_Krush_V4_2: 730935048112732999
+      Koko_Krush_V4_3: 6039661770150872211
+      Koko_Krush_V4_4: 4737701430743822047
+      Koko_Krush_V4_5: 7880272491392549848
+      Koko_Krush_V4_6: 1040471434418818440
+      Koko_Krush_V4_7: -1722471183170788363
+      Koko_Krush_V4_8: 7243853108980347955
+      Koko_Krush_V4_9: 8328275069020312703
+      Nestle: 4494671264895890035
+      ScoreShape: 6136024018372168110
+      Strawberry_Text: 5539327851999111205
+      life 1: -1740783045540147931
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
