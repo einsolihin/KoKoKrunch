@@ -1,5 +1,6 @@
 using KoKoKrunch.Managers;
 using KoKoKrunch.Utils;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,7 @@ namespace KoKoKrunch.UI
         [Header("HUD Elements")]
         [SerializeField] private TextMeshProUGUI scoreText;
         [SerializeField] private TextMeshProUGUI timerText;
-        [SerializeField] private Image[] heartIcons;
+        [SerializeField] private GameObject[] heartIcons;
 
         private void Start()
         {
@@ -53,7 +54,26 @@ namespace KoKoKrunch.UI
         {
             for (int i = 0; i < heartIcons.Length; i++)
             {
-                heartIcons[i].gameObject.SetActive(i < lives);
+                var heart = heartIcons[i];
+                var skeleton = heart.GetComponent<SkeletonGraphic>();
+
+                if (skeleton == null) continue;
+
+                if (i < lives)
+                {
+                    heart.SetActive(true);
+                    skeleton.AnimationState.SetAnimation(0, "Heart_Life", true);
+                }
+                else
+                {
+                    var track = skeleton.AnimationState.SetAnimation(0, "Heart_Lost", false);
+
+                    // Capture correct reference
+                    track.Complete += (entry) =>
+                    {
+                        heart.SetActive(false);
+                    };
+                }
             }
         }
 

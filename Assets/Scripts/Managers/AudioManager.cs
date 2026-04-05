@@ -46,12 +46,13 @@ namespace KoKoKrunch.Managers
 
         public void PlayWinBGM()
         {
-            PlayBGM(winBGM);
+            PlayBGM(winBGM, false);
+
         }
 
         public void PlayLoseBGM()
         {
-            PlayBGM(loseBGM);
+            PlayBGM(loseBGM, false);
         }
 
         public void StopBGM()
@@ -68,12 +69,12 @@ namespace KoKoKrunch.Managers
 
         // ── Internal ──
 
-        private void PlayBGM(AudioClip clip)
+        private void PlayBGM(AudioClip clip, bool loop = true)
         {
             if (bgmSource == null || clip == null) return;
 
             bgmSource.clip = clip;
-            bgmSource.loop = true;
+            bgmSource.loop = loop;
             bgmSource.Play();
         }
 

@@ -526,6 +526,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
+  - {fileID: 0}
   - {fileID: 2100000, guid: 841d64a735148472186b516304a37636, type: 2}
   - {fileID: 2100000, guid: d70e36f21e5a54573bd567d87a92c15a, type: 2}
   m_StaticBatchInfo:
@@ -751,6 +752,7 @@ GameObject:
   - component: {fileID: 1028113112}
   - component: {fileID: 1028113111}
   - component: {fileID: 1028113114}
+  - component: {fileID: 1028113115}
   m_Layer: 0
   m_Name: Heart2
   m_TagString: Untagged
@@ -834,7 +836,7 @@ MonoBehaviour:
   initialFlipX: 0
   initialFlipY: 0
   startingAnimation: Heart_Life
-  startingLoop: 0
+  startingLoop: 1
   timeScale: 1
   freeze: 0
   layoutScaleMode: 0
@@ -868,6 +870,28 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!95 &1028113115
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1028113109}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 12d756a51d17b4e96b3861f2d6f7f965, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1247859817
 GameObject:
   m_ObjectHideFlags: 0
@@ -994,9 +1018,9 @@ MonoBehaviour:
   scoreText: {fileID: 1725919947}
   timerText: {fileID: 1900579467}
   heartIcons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1871279733}
+  - {fileID: 1927091156}
+  - {fileID: 1028113109}
 --- !u!114 &1265678856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1628,6 +1652,7 @@ GameObject:
   - component: {fileID: 1871279736}
   - component: {fileID: 1871279735}
   - component: {fileID: 1871279737}
+  - component: {fileID: 1871279738}
   m_Layer: 0
   m_Name: Heart0
   m_TagString: Untagged
@@ -1745,6 +1770,28 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!95 &1871279738
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871279733}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 12d756a51d17b4e96b3861f2d6f7f965, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1900579464
 GameObject:
   m_ObjectHideFlags: 0
@@ -1894,6 +1941,7 @@ GameObject:
   - component: {fileID: 1927091159}
   - component: {fileID: 1927091158}
   - component: {fileID: 1927091160}
+  - component: {fileID: 1927091161}
   m_Layer: 0
   m_Name: Heart1
   m_TagString: Untagged
@@ -1977,7 +2025,7 @@ MonoBehaviour:
   initialFlipX: 0
   initialFlipY: 0
   startingAnimation: Heart_Life
-  startingLoop: 0
+  startingLoop: 1
   timeScale: 1
   freeze: 0
   layoutScaleMode: 0
@@ -2011,6 +2059,28 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!95 &1927091161
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927091156}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 12d756a51d17b4e96b3861f2d6f7f965, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &2013386765
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2029,19 +2099,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1929780880138326998, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_Size.x
-      value: 3.2990303
+      value: 15.557636
       objectReference: {fileID: 0}
     - target: {fileID: 1929780880138326998, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_Size.y
-      value: 2.7189739
+      value: 11.803474
       objectReference: {fileID: 0}
     - target: {fileID: 1929780880138326998, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_Offset.x
-      value: 0.08995861
+      value: -2.5368853
       objectReference: {fileID: 0}
     - target: {fileID: 1929780880138326998, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_Offset.y
-      value: 1.1094869
+      value: 14.407883
       objectReference: {fileID: 0}
     - target: {fileID: 1929780880138326998, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_SpriteTilingProperty.oldSize.x
