@@ -323,12 +323,12 @@ namespace KoKoKrunch.Editor
         // ──────────────────────────────────────────────
         private static void CreateItemPrefabs()
         {
-            CreateItemPrefab("Strawberry", "strawberry.png", StrawberryRed, KoKoKrunch.Gameplay.ItemType.Strawberry, 0.5f);
-            CreateItemPrefab("KokoKrunchPack1", "kokokrunch ori.png", KokoPack1Brown, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack1, 0.6f);
-            CreateItemPrefab("KokoKrunchPack2", "kokokrunch strawbery.png", KokoPack2Green, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack2, 0.6f);
+            CreateItemPrefab("Strawberry", "strawberry.png", StrawberryRed, KoKoKrunch.Gameplay.ItemType.Strawberry, 0.5f, new Color(1f, 1f, 0.6f));
+            CreateItemPrefab("KokoKrunchPack1", "kokokrunch ori.png", KokoPack1Brown, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack1, 0.6f, new Color(1f, 0.9f, 0.4f));
+            CreateItemPrefab("KokoKrunchPack2", "kokokrunch strawbery.png", KokoPack2Green, KoKoKrunch.Gameplay.ItemType.KokoKrunchPack2, 0.6f, new Color(1f, 1f, 0.8f));
         }
 
-        private static GameObject CreateItemPrefab(string name, string imageName, Color fallbackColor, KoKoKrunch.Gameplay.ItemType itemType, float size)
+        private static GameObject CreateItemPrefab(string name, string imageName, Color fallbackColor, KoKoKrunch.Gameplay.ItemType itemType, float size, Color trailBaseColor)
         {
             string path = $"{PrefabsPath}/Items/{name}.prefab";
 
@@ -351,6 +351,31 @@ namespace KoKoKrunch.Editor
             var so = new SerializedObject(fi);
             so.FindProperty("itemType").enumValueIndex = (int)itemType;
             so.ApplyModifiedPropertiesWithoutUndo();
+
+            // Trail effect child
+            var trailObj = new GameObject("Trail");
+            trailObj.transform.SetParent(obj.transform, false);
+            var trail = trailObj.AddComponent<TrailRenderer>();
+            trail.time = 0.3f;
+            trail.widthCurve = new AnimationCurve(
+                new Keyframe(0f, 0.4f),
+                new Keyframe(1f, 0f)
+            );
+            trail.numCornerVertices = 4;
+            trail.numCapVertices = 4;
+            trail.material = sr.sharedMaterial; // Reuse SpriteRenderer material (URP-compatible)
+            trail.sortingOrder = 1;
+            trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            trail.receiveShadows = false;
+
+            Color trailColor = trailBaseColor;
+            trailColor.a = 1f;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(trailColor, 0f), new GradientColorKey(trailColor, 1f) },
+                new[] { new GradientAlphaKey(0.8f, 0f), new GradientAlphaKey(0f, 1f) }
+            );
+            trail.colorGradient = gradient;
 
             GameObject prefab = PrefabUtility.SaveAsPrefabAsset(obj, path);
             Object.DestroyImmediate(obj);

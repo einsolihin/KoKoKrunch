@@ -149,7 +149,6 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
   - {fileID: 2100000, guid: 841d64a735148472186b516304a37636, type: 2}
   - {fileID: 2100000, guid: d70e36f21e5a54573bd567d87a92c15a, type: 2}
   m_StaticBatchInfo:
@@ -172,7 +171,7 @@ MeshRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &5187865666469721544
@@ -193,9 +192,7 @@ MonoBehaviour:
   initialFlipX: 0
   initialFlipY: 0
   updateWhenInvisible: 3
-  separatorSlotNames:
-  - Koko_Charac_Head
-  - Koko_Charac_Body
+  separatorSlotNames: []
   zSpacing: 0
   useClipping: 1
   immutableTriangles: 0
@@ -218,7 +215,7 @@ MonoBehaviour:
   updateTiming: 1
   unscaledTime: 0
   _animationName: Character_Idle
-  loop: 0
+  loop: 1
   timeScale: 1
 --- !u!33 &8068442674851888994
 MeshFilter:

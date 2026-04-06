@@ -2134,34 +2134,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5187865666469721544, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: loop
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5187865666469721544, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: initialFlipX
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5187865666469721544, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: initialFlipY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5187865666469721544, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: separatorSlotNames.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6038652708782265291, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: m_Materials.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6038652708782265291, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 841d64a735148472186b516304a37636, type: 2}
-    - target: {fileID: 6038652708782265291, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
-      propertyPath: 'm_Materials.Array.data[1]'
-      value: 
-      objectReference: {fileID: 2100000, guid: d70e36f21e5a54573bd567d87a92c15a, type: 2}
     - target: {fileID: 8068442674851888994, guid: edeedfc0c201b4e84be5f20638031acb, type: 3}
       propertyPath: m_Mesh
       value: 
