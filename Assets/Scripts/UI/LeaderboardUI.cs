@@ -4,6 +4,7 @@ using KoKoKrunch.Data;
 using KoKoKrunch.Managers;
 using KoKoKrunch.Utils;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -40,6 +41,9 @@ namespace KoKoKrunch.UI
         private float delayNextScene = 0.5f; // Delay before allowing scene change (to prevent accidental clicks)
         private bool canChangeScene = false;
 
+        
+        int maxLeaderboardEntries;
+
         private void Start()
         {
             StartCoroutine(EnableSceneChangeAfterDelay());
@@ -53,7 +57,6 @@ namespace KoKoKrunch.UI
         private void PopulateLeaderboard()
         {
             List<PlayerData> entries = DataManager.Instance.GetLeaderboard();
-            int maxLeaderboardEntries = GameManager.Instance.Config.maxLeaderboardEntries;
 
             // Top 1
             SetTopPlayer(top1RankText, top1NameText, top1ScoreText, top1NameScoreText, entries, 0);
@@ -70,12 +73,26 @@ namespace KoKoKrunch.UI
                 Destroy(child.gameObject);
             }
 
+            
+        }
+
+        public void PopulateRow()
+        {
+            List<PlayerData> entries = DataManager.Instance.GetLeaderboard();
+            int maxLeaderboardEntries = GameManager.Instance.Config.maxLeaderboardEntries;
+
+             StartCoroutine(DelayPopulateRows(entries,maxLeaderboardEntries));
+        }
+
+        IEnumerator DelayPopulateRows(List<PlayerData> entries,int maxLeaderboardEntries)
+        {
             // Populate #4 onwards
             for (int i = 3; i < maxLeaderboardEntries; i++)
             {
                 GameObject entryObj = Instantiate(leaderboardEntryPrefab, leaderboardContent);
                 var entry = entryObj.GetComponent<LeaderboardEntry>();
 
+                
                 if (entries.Count <=i)
                 {
                     if (entry != null)
@@ -111,6 +128,8 @@ namespace KoKoKrunch.UI
                         }
                     }
                 }
+
+                yield return new WaitForSeconds(0.1f);
             }
         }
 

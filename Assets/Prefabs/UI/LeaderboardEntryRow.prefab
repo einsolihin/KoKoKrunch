@@ -488,6 +488,7 @@ GameObject:
   - component: {fileID: 623234482142909903}
   - component: {fileID: 3981555138350540845}
   - component: {fileID: 7099938008617662436}
+  - component: {fileID: 3585236534733431658}
   m_Layer: 0
   m_Name: LeaderboardEntryRow
   m_TagString: Untagged
@@ -616,3 +617,25 @@ MonoBehaviour:
   rankText: {fileID: 1607834952510003632}
   nameText: {fileID: 8602352514913030170}
   scoreText: {fileID: 3462123080442077372}
+--- !u!95 &3585236534733431658
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194229657772002267}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 887dd255d73da4463b3c77de66bfc978, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

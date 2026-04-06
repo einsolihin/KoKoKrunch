@@ -464,6 +464,7 @@ GameObject:
   - component: {fileID: 955001229}
   - component: {fileID: 955001227}
   - component: {fileID: 955001231}
+  - component: {fileID: 955001232}
   m_Layer: 0
   m_Name: NextButton
   m_TagString: Untagged
@@ -606,6 +607,28 @@ MonoBehaviour:
       immutableTriangles: 0
   updateTiming: 1
   unscaledTime: 0
+--- !u!95 &955001232
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 955001226}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 58c53fd94d2c04816b8eb81dbebd6853, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1028113109
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,8 +1129,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4292662777
-  m_fontColor: {r: 0.9764706, g: 0.8352941, b: 0.8627451, a: 1}
+    rgba: 14472697
+  m_fontColor: {r: 0.9764706, g: 0.8352941, b: 0.8627451, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
