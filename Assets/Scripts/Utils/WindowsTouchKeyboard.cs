@@ -2,6 +2,7 @@ using System.Diagnostics;
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
+using System.Collections;
 
 namespace KoKoKrunch.Utils
 {
@@ -28,7 +29,15 @@ namespace KoKoKrunch.Utils
 
         private void OnDisable()
         {
-            CloseKeyboard();
+            StartCoroutine(DelayedClose());
+        }
+
+        private IEnumerator DelayedClose()
+        {
+            yield return new WaitForSeconds(0.3f);
+
+            if (!inputField.isFocused)
+                CloseKeyboard();
         }
 
         public static void OpenKeyboard()
