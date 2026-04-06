@@ -74,7 +74,7 @@ namespace KoKoKrunch.UI
                     heart.SetActive(true);
                     skeleton.AnimationState.SetAnimation(0, "Heart_Life", true);
                 }
-                else
+                else if (skeleton.AnimationState.GetCurrent(0)?.Animation.Name != "Heart_Lost")
                 {
                     var track = skeleton.AnimationState.SetAnimation(0, "Heart_Lost", false);
 
