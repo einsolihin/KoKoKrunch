@@ -514,9 +514,6 @@ namespace KoKoKrunch.Editor
             so.FindProperty("hiddenAdminButton").objectReferenceValue = hiddenButton;
             so.ApplyModifiedPropertiesWithoutUndo();
 
-            // Add ScreenSetup
-            canvas.AddComponent<KoKoKrunch.Utils.ScreenSetup>();
-
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/LandingScene.unity");
             Debug.Log("LandingScene created");
         }
@@ -968,9 +965,6 @@ namespace KoKoKrunch.Editor
             so.FindProperty("leaderboardEntryPrefab").objectReferenceValue = entryPrefab;
 
             so.ApplyModifiedPropertiesWithoutUndo();
-
-            // Add ScreenSetup
-            canvas.AddComponent<KoKoKrunch.Utils.ScreenSetup>();
 
             EditorSceneManager.SaveScene(scene, $"{ScenesPath}/LeaderboardScene.unity");
             Debug.Log("LeaderboardScene created");

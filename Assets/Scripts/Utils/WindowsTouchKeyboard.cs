@@ -12,7 +12,7 @@ namespace KoKoKrunch.Utils
     /// Works on Windows touch panel builds. No effect in Editor or non-Windows platforms.
     /// </summary>
     [RequireComponent(typeof(TMP_InputField))]
-    public class WindowsTouchKeyboard : MonoBehaviour, ISelectHandler, IDeselectHandler
+    public class WindowsTouchKeyboard : MonoBehaviour, ISelectHandler
     {
         private TMP_InputField inputField;
 
@@ -24,11 +24,6 @@ namespace KoKoKrunch.Utils
         public void OnSelect(BaseEventData eventData)
         {
             OpenKeyboard();
-        }
-
-        public void OnDeselect(BaseEventData eventData)
-        {
-            CloseKeyboard();
         }
 
         private void OnDisable()
