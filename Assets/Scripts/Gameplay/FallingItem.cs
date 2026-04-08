@@ -25,7 +25,7 @@ namespace KoKoKrunch.Gameplay
         {
             fallSpeed = speed;
             bottomBoundary = boundary;
-            SetupTrail();
+            // SetupTrail();
         }
 
         private void SetupTrail()

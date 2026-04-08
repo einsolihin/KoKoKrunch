@@ -258,10 +258,8 @@ namespace KoKoKrunch.Managers
             passwordInput.contentType = TMP_InputField.ContentType.Password;
             passwordInput.pointSize = 18f;
 
-            // Add touch keyboard support
+            // Add touch keyboard support (handles open on select/tap, close on disable)
             inputObj.AddComponent<WindowsTouchKeyboard>();
-            passwordInput.onSelect.AddListener(_ => WindowsTouchKeyboard.OpenKeyboard());
-            passwordInput.onDeselect.AddListener(_ => WindowsTouchKeyboard.CloseKeyboard());
             
             // Error text
             var errorObj = new GameObject("ErrorText");
